@@ -1,3 +1,4 @@
-# Auditoria eSocial — apuração de créditos
+# Auditoria eSocial — apuração de créditos (versão piloto)
 
-Ferramenta HTML estática (leiaute S-1.3). O processamento ocorre integralmente no navegador; nenhum XML é enviado a servidor.
+© 2026 Luis Alfredo Vaz Junior. Todos os direitos reservados. Uso restrito; ver arquivo LICENSE.
+O processamento ocorre no navegador do usuário; nenhum XML é enviado a servidor.
