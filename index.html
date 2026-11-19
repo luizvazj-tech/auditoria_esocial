@@ -5,6 +5,7 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <title>Auditoria eSocial — Recuperação de Créditos</title>
 <style>
 :root{--bg:#f6f5f1;--sf:#fff;--tx:#1d2330;--mu:#5d6676;--bd:#dcd9d0;--ac:#1f4e79;--ac2:#e8eef5;--ok:#2d6a4f;--am:#9a6700;--bad:#a4262c}
@@ -51,7 +52,7 @@ fieldset{border:1px solid var(--bd);border-radius:8px;margin:0 0 10px}legend{fon
 <body>
 <header><h1>Auditoria eSocial — apuração de créditos</h1>
 <p>Leiaute S-1.3 · processamento 100% local no navegador: os XML não saem do seu computador.</p>
-<nav role="tablist"><button class="tab on" data-tab="importar">1. Importar</button><button class="tab" data-tab="params">2. Parâmetros</button><button class="tab" data-tab="achados">3. Achados</button><button class="tab" data-tab="dashboard">4. Dashboard</button><button class="tab" data-tab="plano">5. Plano de recuperação</button><button class="tab" data-tab="historico">6. Histórico</button><button class="tab" data-tab="regras">Regras e fontes</button></nav></header>
+<nav role="tablist"><button class="tab on" data-tab="importar">1. Importar</button><button class="tab" data-tab="params">2. Parâmetros</button><button class="tab" data-tab="achados">3. Achados</button><button class="tab" data-tab="dashboard">4. Dashboard</button><button class="tab" data-tab="plano">5. Plano de recuperação</button><button class="tab" data-tab="historico">6. Histórico</button><button class="tab" data-tab="regras">Regras e fontes</button><button class="tab" data-tab="privacidade">Privacidade</button></nav></header>
 <main>
 <section class="pane" id="pane-importar">
 <div class="card"><h2>Arquivos XML do eSocial</h2>
@@ -106,6 +107,15 @@ fieldset{border:1px solid var(--bd);border-radius:8px;margin:0 0 10px}legend{fon
 <div id="histFiles"></div></section>
 <section class="pane" id="pane-regras" hidden>
 <div class="card"><h2>Regras ativas, base legal e providência</h2><p class="muted">Desmarque as regras que não deseja executar. Toda referência marcada com [VERIFICAR FONTE OFICIAL] deve ser conferida antes de ser utilizada em peça ou requerimento.</p><div id="rulesList"></div></div>
+</section>
+<section class="pane" id="pane-privacidade" hidden>
+<div class="card"><h2>Privacidade e proteção de dados (LGPD)</h2>
+<p><b>Natureza do tratamento.</b> Os XML do eSocial contêm dados pessoais de trabalhadores (CPF, matrícula, remuneração e afastamentos). Esta ferramenta processa os arquivos exclusivamente no navegador do usuário: nenhum arquivo, resultado ou dado pessoal é enviado a servidor, e a página adota política de segurança de conteúdo que bloqueia conexões externas (connect-src 'none'). O histórico é gravado apenas no armazenamento local deste navegador.</p>
+<p><b>Papéis e base legal.</b> O usuário que carrega os arquivos atua como controlador (ou operador, por conta do controlador) e responde pela base legal do tratamento, que na apuração de tributos e contribuições pagos a maior costuma ser o cumprimento de obrigação legal ou regulatória e o exercício regular de direitos (Lei 13.709/2018, art. 7º, II e VI) [VERIFICAR FONTE OFICIAL quanto ao enquadramento de cada caso]. A finalidade é apurar e recuperar valores pagos a maior, e os dados tratados limitam-se ao necessário a essa finalidade (art. 6º, I a III).</p>
+<p><b>Medidas adotadas.</b> Mascaramento de CPF na tela e na exportação (ativo por padrão); ausência de transmissão a terceiros; apagamento total do histórico em Histórico → Apagar tudo; prazo de retenção automática configurável abaixo; cópia de segurança somente por ação do usuário (art. 46).</p>
+<p><b>Direitos dos titulares e incidentes.</b> Pedidos dos titulares (art. 18) e comunicação de incidentes (art. 48) são de responsabilidade do controlador. A cópia de segurança exportada contém dados pessoais e deve ser guardada pelo usuário com controles equivalentes.</p>
+<p class="muted">Este texto é um aviso técnico, não política de privacidade completa nem parecer; a política, o registro das operações (art. 37) e o relatório de impacto (art. 38) devem ser elaborados pelo controlador.</p>
+<label>Apagar automaticamente auditorias gravadas há mais de <select id="retDias"><option value="0">Não apagar</option><option value="30">30 dias</option><option value="90">90 dias</option><option value="180">180 dias</option><option value="365">365 dias</option></select></label></div>
 </section>
 </main>
 <footer class="disc" style="max-width:1200px;margin:0 auto 30px;padding:0 24px">© 2026 Luis Alfredo Vaz Junior. Todos os direitos reservados. Programa de computador protegido pela Lei 9.609/1998 e pela Lei 9.610/1998. Versão piloto de uso restrito: é vedada a cópia, a modificação, a engenharia reversa, a redistribuição e a exploração comercial sem autorização escrita do titular.</footer>
@@ -332,8 +342,41 @@ function inccp(c) { return c === '00' ? 'não é base' : c; }
 /* ------------------------------------------------------------------ */
 function createContext(params) {
   const P = Object.assign(defaultParams(), params || {});
-  return { P, files: 0, bytes: 0, events: 0, counts: {}, warnings: [], parseErrors: [], emp: [], estabs: {}, rub: {}, rubExcl: {},
+  return { P, files: 0, bytes: 0, events: 0, counts: {}, warnings: [], conform: {}, parseErrors: [], emp: [], estabs: {}, rub: {}, rubExcl: {},
     byKey: {}, fileInfo: {}, s1200: [], s2299: [], afast: [], b5001: {}, ir5002: {}, fg5003: {}, cs5011: {}, p2500: [], c2501: [], desligs: [], findings: [], dups: 0 };
+}
+
+/* ---------- Conformidade estrutural do XML (não substitui a validação XSD oficial) ---------- */
+const CONFORM = {
+  'CF-01': 'Namespace do evento não indica o leiaute S-1.3 (v_S_01_03_xx): o arquivo pode ter sido gerado em outra versão do leiaute.',
+  'CF-02': 'CPF com dígitos verificadores inválidos (ou sequência repetida).',
+  'CF-03': 'CNPJ do empregador com formato ou dígitos verificadores inválidos (IN RFB 2.229/2024; admite letras e números nas 12 primeiras posições).',
+  'CF-04': 'Evento sem o elemento ideEvento ou sem identificador (atributo Id).'
+};
+function cpfOk(c) {
+  c = digits(c); if (c.length !== 11 || /^(\d)\1+$/.test(c)) return false;
+  for (const n of [9, 10]) { let sum = 0; for (let i = 0; i < n; i++) sum += (+c[i]) * (n + 1 - i); const d = (sum * 10) % 11 % 10; if (d !== +c[n]) return false; }
+  return true;
+}
+function cnpjOk(c) {
+  c = String(c || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); if (!/^[A-Z0-9]{12}\d{2}$/.test(c)) return false;
+  const v = (ch) => ch.charCodeAt(0) - 48;
+  const dv = (n, w) => { let sum = 0; for (let i = 0; i < n; i++) sum += v(c[i]) * w[i]; const r = sum % 11; return r < 2 ? 0 : 11 - r; };
+  const d1 = dv(12, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]); const d2 = dv(13, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  return d1 === +c[12] && d2 === +c[13] && !/^(\d)\1+$/.test(c);
+}
+function conf(ctx, code, file, tipo) {
+  const o = (ctx.conform[code] = ctx.conform[code] || { n: 0, arquivos: [] }); o.n++;
+  const k = file + (tipo ? ' (' + tipo + ')' : ''); if (o.arquivos.length < 5 && !o.arquivos.includes(k)) o.arquivos.push(k);
+}
+function checkConform(ctx, e, type, file) {
+  const ns = e.namespaceURI || (e.parentNode && e.parentNode.namespaceURI) || '';
+  if (!/\/v_?S_?01_?03/i.test(ns)) conf(ctx, 'CF-01', file, type);
+  if (!e.getAttribute('Id') || !kid(e, 'ideEvento')) conf(ctx, 'CF-04', file, type);
+  const emp = kid(e, 'ideEmpregador');
+  if (emp) { const tp = val(emp, 'tpInsc'), nr = val(emp, 'nrInsc'); if (tp === '1' && nr.length >= 14 && !cnpjOk(nr)) conf(ctx, 'CF-03', file, type); else if (tp === '2' && !cpfOk(nr)) conf(ctx, 'CF-02', file, type); }
+  const seen = new Set();
+  for (const tag of ['cpfTrab', 'cpfBenef']) for (const n of desc(e, tag)) { const c = digits(n.textContent); if (c && !seen.has(c)) { seen.add(c); if (!cpfOk(c)) conf(ctx, 'CF-02', file, type); } }
 }
 
 function ingestDoc(ctx, doc, file) {
@@ -346,6 +389,7 @@ function ingestDoc(ctx, doc, file) {
     found++;
     const type = TAGMAP[name] || name;
     ctx.events++; ctx.counts[type] = (ctx.counts[type] || 0) + 1; fi.eventos++; fi.tipos[type] = (fi.tipos[type] || 0) + 1;
+    try { checkConform(ctx, e, type, file); } catch (err) { /* verificação auxiliar */ }
     try { dispatch(ctx, type, e, { file }); } catch (err) { ctx.warnings.push(file + ' (' + type + '): ' + err.message); }
   }
   if (!found) ctx.warnings.push(file + ': nenhum evento eSocial (evt*) localizado.');
@@ -838,7 +882,7 @@ function dehydrate(f) { return { rule: f.rule, kind: f.kind, conf: f.conf, credi
 function hydrate(s, hoje) { const r = RULES[s.rule] || { tributo: 'GERAL', titulo: s.rule, acao: '', legal: [] };
   const f = Object.assign({ tributo: r.tributo, titulo: r.titulo, acao: r.acao }, s); f.prazo = prazo({ P: { hoje } }, s.per); return f; }
 
-return { fkey, dehydrate, hydrate, createContext, ingestDoc, runRules, resumo, defaultParams, RULES, NAT, NATR, TABELA_INSS, TAGMAP, maxContrib, contrib, prazo, version: '1.0.0' };
+return { fkey, dehydrate, hydrate, createContext, ingestDoc, runRules, resumo, defaultParams, RULES, NAT, NATR, TABELA_INSS, TAGMAP, CONFORM, cpfOk, cnpjOk, maxContrib, contrib, prazo, version: '1.0.0' };
 });
 </script>
 <script>/* Gerador de XMLs sintéticos (dados fictícios) para demonstração e teste */
@@ -1070,7 +1114,7 @@ async function run() {
   const nr = ctx.nrInsc || Object.keys(ctx.estabs)[0] || '';
   const audit = { id: Date.now().toString(36), ts: new Date().toISOString(), nome: ($('#auditNome').value || '').trim(), empresa: nr, params: JSON.parse(JSON.stringify(st.params)),
     arquivos: meta.map((m) => Object.assign(m, { eventos: (ctx.fileInfo[m.name] || {}).eventos || 0, tipos: (ctx.fileInfo[m.name] || {}).tipos || {} })),
-    counts: ctx.counts, eventos: ctx.events, dups: ctx.dups, warnings: ctx.warnings, parseErrors: ctx.parseErrors, findings: ctx.findings.map(E.dehydrate) };
+    counts: ctx.counts, eventos: ctx.events, dups: ctx.dups, warnings: ctx.warnings, conformidade: ctx.conform, parseErrors: ctx.parseErrors, findings: ctx.findings.map(E.dehydrate) };
   const r = E.resumo(ctx); audit.resumo = { total: r.total, risco: r.risco, foraPrazo: r.foraPrazo, n: r.n };
   if (!audit.nome) audit.nome = 'Auditoria de ' + new Date(audit.ts).toLocaleDateString('pt-BR');
   try { await DB.put('audits', audit); } catch (e) { toast('Não foi possível gravar o histórico: ' + e.message); }
@@ -1078,7 +1122,7 @@ async function run() {
 }
 function setCurrent(audit) {
   st.audit = audit; st.sel = null;
-  st.ctx = { findings: audit.findings.map((s) => E.hydrate(s, st.params.hoje)), files: audit.arquivos.length, events: audit.eventos, counts: audit.counts, dups: audit.dups, warnings: audit.warnings || [], parseErrors: audit.parseErrors || [] };
+  st.ctx = { findings: audit.findings.map((s) => E.hydrate(s, st.params.hoje)), files: audit.arquivos.length, events: audit.eventos, counts: audit.counts, dups: audit.dups, warnings: audit.warnings || [], conform: audit.conformidade || {}, parseErrors: audit.parseErrors || [] };
   st.ctx.findings.forEach((f, i) => { f.id = i + 1; });
   renderAll();
 }
@@ -1109,11 +1153,16 @@ function renderFiles() {
   $('#btnRun').disabled = !st.files.length;
 }
 function renderAll() { renderIntake(); renderList(); renderDashboard(); renderPlan(); renderHistory(); }
+function confHtml(cf) {
+  const k = Object.keys(cf || {}).sort(); if (!k.length) return '<p class="muted">Conformidade estrutural: nenhuma inconsistência detectada nas verificações básicas (versão do leiaute, identificador, CPF e CNPJ). Isto não substitui a validação XSD oficial.</p>';
+  return '<div class="card"><h3>Conformidade estrutural do XML</h3><p class="muted">Verificações básicas; não substituem a validação contra os XSD oficiais do eSocial.</p>' + k.map((c) => '<p class="warn"><b>' + c + '</b> · ' + cf[c].n + ' ocorrência(s) — ' + esc(E.CONFORM[c] || '') + '<br><small>' + cf[c].arquivos.map(esc).join('; ') + '</small></p>').join('') + '</div>';
+}
 function renderIntake() {
   const c = st.ctx; if (!c) { $('#intake').innerHTML = ''; return; }
   $('#intake').innerHTML = '<div><b>' + esc(st.audit.nome) + '</b> · ' + fdt(st.audit.ts) + '</div><div class="kv"><b>' + c.files + '</b> arquivo(s) lido(s) · <b>' + c.events + '</b> evento(s) · <b>' + c.dups + '</b> retificação(ões) substituída(s)</div>' +
     '<div class="chips">' + Object.keys(c.counts).sort().map((k) => '<span class="chip">' + k + ' · ' + c.counts[k] + '</span>').join('') + '</div>' +
     (c.parseErrors.length ? '<p class="warn">XML malformado: ' + c.parseErrors.map(esc).join(', ') + '</p>' : '') + (c.warnings.length ? '<p class="warn">' + c.warnings.slice(0, 8).map(esc).join('<br>') + '</p>' : '') +
+    confHtml(c.conform) +
     (c.counts['S-1200'] && !c.counts['S-1010'] ? '<p class="warn">Há S-1200 mas nenhum S-1010: sem o cadastro de rubricas não é possível auditar incidências.</p>' : '');
 }
 function filtered() {
@@ -1244,9 +1293,17 @@ function askConfirm(el, msg, fn) { if (el.dataset.armed) { delete el.dataset.arm
 function showTab(n) { $$('.tab').forEach((t) => t.classList.toggle('on', t.dataset.tab === n)); $$('.pane').forEach((p) => (p.hidden = p.id !== 'pane-' + n)); }
 
 /* ---------- Eventos ---------- */
+const RET_KEY = 'ae_retencao_dias';
+function getRet() { try { return parseInt(localStorage.getItem(RET_KEY) || '0', 10) || 0; } catch (e) { return 0; } }
+async function purgeOld() {
+  const d = getRet(); if (!d) return 0; const lim = Date.now() - d * 86400000; let n = 0;
+  for (const a of await DB.all('audits')) if (new Date(a.ts).getTime() < lim) { await DB.del('audits', a.id); n++; }
+  return n;
+}
 document.addEventListener('DOMContentLoaded', async () => {
   renderParams(); renderRules(); renderFiles(); renderList();
-  await DB.open(); await loadHistory(); renderAll();
+  await DB.open(); try { await purgeOld(); } catch (e) {} await loadHistory(); renderAll();
+  const rs = $('#retDias'); if (rs) { rs.value = String(getRet()); rs.onchange = async () => { try { localStorage.setItem(RET_KEY, rs.value); } catch (e) {} const n = await purgeOld(); await loadHistory(); renderAll(); toast(n ? n + ' auditoria(s) anterior(es) ao prazo foram apagadas.' : 'Prazo de retenção atualizado.'); }; }
   $$('.tab').forEach((t) => (t.onclick = () => showTab(t.dataset.tab)));
   const dz = $('#drop'), inp = $('#fileIn');
   dz.onclick = () => inp.click(); inp.onchange = () => { addFiles([...inp.files]); inp.value = ''; };
