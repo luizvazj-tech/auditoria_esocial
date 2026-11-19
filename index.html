@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auditoria eSocial — Recuperação de Créditos</title>
+<style>
+:root{--bg:#f6f5f1;--sf:#fff;--tx:#1d2330;--mu:#5d6676;--bd:#dcd9d0;--ac:#1f4e79;--ac2:#e8eef5;--ok:#2d6a4f;--am:#9a6700;--bad:#a4262c}
+@media(prefers-color-scheme:dark){:root{--bg:#14171c;--sf:#1c2027;--tx:#e8eaee;--mu:#98a1b0;--bd:#323946;--ac:#7fb0e0;--ac2:#242d3a;--ok:#6fcf97;--am:#e0b24c;--bad:#ef7b80}}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx)}
+header{padding:18px 24px 0;max-width:1200px;margin:auto}h1{font:600 21px/1.2 Georgia,serif;margin:0 0 4px}header p{margin:0;color:var(--mu);font-size:13px}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--bd);margin:14px 0 0;flex-wrap:wrap}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:9px 14px;font:inherit;color:var(--mu);cursor:pointer}.tab.on{color:var(--ac);border-color:var(--ac);font-weight:600}
+main{max-width:1200px;margin:auto;padding:18px 24px 60px}.card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:14px}
+h2{font-size:16px;margin:0 0 10px}h3{font-size:15px;margin:0 0 8px}h4{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin:14px 0 4px}
+.muted{color:var(--mu);font-size:13px}.warn{color:var(--am);font-size:13px}button,select,input,textarea{font:inherit;color:inherit}
+.btn{background:var(--ac);color:var(--sf);border:0;border-radius:7px;padding:8px 14px;cursor:pointer;font-weight:600}.btn.sec{background:var(--ac2);color:var(--ac)}.btn:disabled{opacity:.45;cursor:not-allowed}
+#drop{border:2px dashed var(--bd);border-radius:10px;padding:30px;text-align:center;cursor:pointer;color:var(--mu)}#drop.over{border-color:var(--ac);background:var(--ac2)}
+#fileList{list-style:none;padding:0;margin:10px 0;max-height:220px;overflow:auto;font-size:13px}#fileList li{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--bd)}
+.x{background:none;border:0;color:var(--mu);cursor:pointer;font-size:18px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chip{background:var(--ac2);color:var(--ac);border-radius:99px;padding:2px 10px;font-size:12px}.chip.bad{color:var(--bad)}.chip.amb{color:var(--am)}
+.kpis,#sumTop{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.kpi{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px}.kpi span{display:block;font-size:12px;color:var(--mu)}.kpi b{font-size:22px;font-variant-numeric:tabular-nums}
+.bar{display:grid;grid-template-columns:150px 1fr 120px;align-items:center;gap:8px;margin:5px 0;font-size:13px}.bar i{display:block;height:12px;background:var(--ac);border-radius:3px;min-width:2px}.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
+#sumComp{display:flex;align-items:flex-end;gap:3px;height:140px;overflow-x:auto;padding-top:6px}.col{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:22px}.col i{display:block;width:16px;background:var(--ac);border-radius:3px 3px 0 0;min-height:1px}.col span{font-size:10px;color:var(--mu);margin-top:3px}
+.split{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}@media(min-width:980px){.split.has{grid-template-columns:1.1fr .9fr}}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}.filters input[type=search],.filters select{padding:6px 8px;border:1px solid var(--bd);border-radius:6px;background:var(--sf)}
+.row{display:grid;grid-template-columns:70px 62px 1fr 110px;gap:8px;width:100%;text-align:left;background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin-bottom:6px;cursor:pointer;align-items:center}.row.on,.row:hover{border-color:var(--ac)}
+.rt small{display:block;color:var(--mu);font-size:12px}.rv{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}.rid{font:12px ui-monospace,monospace;color:var(--mu)}
+.tag{font-size:11px;border-radius:5px;padding:1px 6px;text-align:center}.t-credito{background:#dff1e6;color:var(--ok)}.t-risco{background:#fbe1e1;color:var(--bad)}.t-conferencia{background:#fbf0d3;color:var(--am)}
+#detail{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:16px;position:sticky;top:10px;max-height:calc(100vh - 30px);overflow:auto}.close{float:right}
+dl{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:14px}dt{color:var(--mu)}dd{margin:0}.legal{margin:4px 0;padding-left:18px;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}label.f{display:block;font-size:12px;color:var(--mu)}label.f input,label.f select,label.f textarea{display:block;width:100%;margin-top:2px;padding:6px 8px;border:1px solid var(--bd);border-radius:6px;background:var(--bg)}
+table{border-collapse:collapse;font-size:13px;width:100%}td,th{padding:3px 4px;text-align:left}td input{width:100%;padding:3px 5px;border:1px solid var(--bd);border-radius:4px;background:var(--bg)}
+fieldset{border:1px solid var(--bd);border-radius:8px;margin:0 0 10px}legend{font-weight:600;font-size:13px;padding:0 6px}details{margin:4px 0}summary{cursor:pointer;font-size:14px}details p{margin:4px 0 8px 18px;font-size:13px;color:var(--mu)}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:13px;max-width:90vw}
+.disc{font-size:12px;color:var(--mu);border-left:3px solid var(--am);padding-left:10px;margin-top:14px}
+@media print{nav,.filters,#drop,.actions,header p,.tab,#detail .close{display:none}body{background:#fff;color:#000}.pane{display:block!important}.row{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><h1>Auditoria eSocial — apuração de créditos</h1>
+<p>Leiaute S-1.3 · processamento 100% local no navegador: os XML não saem do seu computador.</p>
+<nav role="tablist"><button class="tab on" data-tab="importar">1. Importar</button><button class="tab" data-tab="params">2. Parâmetros</button><button class="tab" data-tab="achados">3. Achados</button><button class="tab" data-tab="resumo">4. Resumo</button><button class="tab" data-tab="regras">Regras e fontes</button></nav></header>
+<main>
+<section class="pane" id="pane-importar">
+<div class="card"><h2>Arquivos XML do eSocial</h2>
+<div id="drop"><b>Arraste XML ou ZIP aqui</b> ou clique para selecionar<br><span class="muted">S-1000, S-1005, S-1010, S-1200, S-2230, S-2299, S-5001, S-5002, S-5003, S-5011, S-2500, S-2501 (individuais, lotes ou retornos de lote)</span></div>
+<input type="file" id="fileIn" multiple accept=".xml,.zip" hidden>
+<p class="muted" id="fileCount"></p><ul id="fileList"></ul>
+<div class="actions"><button class="btn" id="btnRun" disabled>Executar auditoria</button><button class="btn sec" id="btnSample">Carregar exemplo sintético</button><button class="btn sec" id="btnClear">Limpar</button></div></div>
+<div class="card" id="intake" aria-live="polite"></div>
+<p class="disc">Recomendação de uso: carregue o S-1000, S-1005 e <b>todos os S-1010 vigentes no período</b> junto com os S-1200/S-2299. Sem o S-1010 a incidência de cada rubrica não é conhecida. Os valores são estimativas de triagem, que dependem de conferência na folha e na DCTFWeb antes de qualquer retificação ou pedido.</p>
+</section>
+
+<section class="pane" id="pane-params" hidden>
+<div class="card"><h2>Parâmetros de cálculo</h2><div class="grid">
+<label class="f">Data de referência<input type="date" id="p_hoje"></label>
+<label class="f">Patronal (%)<input id="p_aliqPatronal" inputmode="decimal"></label>
+<label class="f">Terceiros (%)<input id="p_aliqTerceiros" inputmode="decimal"></label>
+<label class="f">RAT padrão (%) <input id="p_ratPadrao" inputmode="decimal"></label>
+<label class="f">FAP padrão<input id="p_fapPadrao" inputmode="decimal"></label>
+<label class="f">FGTS (%)<input id="p_aliqFGTS" inputmode="decimal"></label>
+<label class="f">FGTS aprendiz (%)<input id="p_aliqFGTSAprendiz" inputmode="decimal"></label>
+<label class="f">IRRF — alíquota marginal p/ estimativa (%)<input id="p_irrfMarginal" inputmode="decimal"></label>
+<label class="f">Dedução por dependente (R$)<input id="p_deducaoDependente" inputmode="decimal"></label>
+<label class="f">Margem consignado (%)<input id="p_margemConsignado" inputmode="decimal"></label></div>
+<p class="muted">Alíquotas de RAT/FAP e terceiros são usadas apenas quando o S-1005 não as traz. Para terceiros, confira o FPAS do estabelecimento.</p></div>
+<div class="card"><h2>Regime tributário real (para a regra ENQ-01)</h2><div class="grid">
+<label class="f">Regime que deveria ter sido adotado<select id="p_regimeReal"><option value="auto">Não informado (só inconsistências internas)</option><option value="99">99 — Demais (patronal integral)</option><option value="01">01 — Simples Nacional</option><option value="02">02 — Simples c/ CPRB (a conferir)</option><option value="03">03 — Simples (atividade sujeita ao Anexo IV/ CPP)</option></select></label>
+<label class="f">De (AAAA-MM)<input id="p_regimeDe" placeholder="2021-01"></label><label class="f">Até (AAAA-MM)<input id="p_regimeAte" placeholder="2025-12"></label></div>
+<p><label><input type="checkbox" id="p_cprbReal"> Empresa enquadrada na CPRB (Lei 12.546/2011) — alerta ENQ-02</label><br><label><input type="checkbox" id="p_matTerc"> Aplicar terceiros também ao salário-maternidade (tese a confirmar)</label></p></div>
+<div class="card"><h2>Tabela do INSS do segurado (limites das faixas; 4ª faixa = teto)</h2><table id="tabInss"><thead><tr><th>Ano</th><th>7,5%</th><th>9%</th><th>12%</th><th>14% (teto)</th></tr></thead><tbody></tbody></table>
+<p class="muted">Valores pré-carregados: teto 2026 de R$ 8.475,55 (Portaria Interministerial MPS/MF nº 13/2026). Confira cada ano nas portarias oficiais antes de usar o resultado.</p></div>
+<div class="card"><h2>Grau de risco por CNAE (opcional)</h2><label class="f">Uma linha por CNAE: <code>7 dígitos; RAT%</code> (ex.: 4711301; 3). Tabela do Decreto 3.048/99, Anexo V [VERIFICAR FONTE OFICIAL]<textarea id="p_cnae" rows="4"></textarea></label></div>
+<div class="actions"><button class="btn sec" id="btnReset">Restaurar padrões</button></div>
+</section>
+
+<section class="pane" id="pane-achados" hidden>
+<div class="filters"><input type="search" id="fQ" placeholder="Buscar (regra, CPF, rubrica…)"><select id="fTrib"></select>
+<select id="fKind"><option value="credito">Créditos</option><option value="risco">Riscos</option><option value="conferencia">Conferências</option><option value="">Todos os tipos</option></select>
+<select id="fConf"><option value="">Qualquer confiança</option><option>Alta</option><option>Média</option><option>Baixa</option></select>
+<select id="fPrazo"><option value="">Qualquer prazo</option><option value="ok">Dentro do prazo (5 anos)</option><option value="fora">Fora do prazo</option></select>
+<label><input type="checkbox" id="mask" checked> Mascarar CPF</label><button class="btn sec" id="btnCsv">Copiar CSV</button></div>
+<p class="muted" id="fCount"></p><textarea id="csvOut" rows="6" hidden style="width:100%;font:12px ui-monospace,monospace" aria-label="CSV"></textarea>
+<div class="split has"><div id="fList"></div><div id="detail" hidden></div></div>
+</section>
+
+<section class="pane" id="pane-resumo" hidden>
+<div id="sumTop"></div>
+<div class="card" style="margin-top:14px"><h2>Crédito por tributo</h2><div id="sumTrib"></div></div>
+<div class="card"><h2>Crédito por competência</h2><div id="sumComp"></div></div>
+<p class="disc">Prazo: cálculo de triagem com termo inicial no vencimento da guia (dia 20 do mês seguinte à competência) e prazo de 5 anos (CTN, arts. 165, I, e 168, I; Lei 9.430/96, art. 74). Valores efetivamente recuperáveis dependem da conferência dos recolhimentos na DCTFWeb e, no caso do FGTS, do procedimento perante a CAIXA.</p>
+</section>
+
+<section class="pane" id="pane-regras" hidden>
+<div class="card"><h2>Regras ativas, base legal e providência</h2><p class="muted">Desmarque as regras que não deseja executar. Toda referência marcada com [VERIFICAR FONTE OFICIAL] deve ser conferida antes de ser utilizada em peça ou requerimento.</p><div id="rulesList"></div></div>
+</section>
+</main>
+<div id="toast" hidden role="status"></div>
+<script>/* AuditEngine — Auditoria de XMLs do eSocial (leiaute S-1.3)
+ * Motor de leitura + regras. Roda 100% no navegador (ou em Node com DOMParser injetado).
+ * Nada é enviado a servidor: os XML são processados localmente. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.AuditEngine = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+'use strict';
+
+/* ------------------------------------------------------------------ */
+/* Dicionários (extraídos do Anexo I do leiaute S-1.3, rev. 20/10/2026) */
+/* ------------------------------------------------------------------ */
+const NAT = {"1000": "Salário, vencimento, soldo", "1001": "Subsídio", "1002": "Descanso semanal remunerado - DSR", "1003": "Horas extraordinárias", "1004": "Horas extraordinárias - Banco de horas", "1005": "Direito de arena", "1006": "Intervalos intra e inter jornadas não concedidos", "1007": "Luvas e premiações", "1009": "Salário-família - Complemento", "1010": "Salário in natura - Pagos em bens ou serviços", "1011": "Sobreaviso e prontidão", "1012": "Descanso semanal remunerado - DSR e", "1015": "Adiantamento de férias", "1016": "Férias", "1017": "Terço constitucional de férias", "1018": "Férias - Abono ou gratificação de férias superior a 20 dias", "1019": "Terço constitucional de férias - Abono ou gratificação de férias superior a 20 dias", "1020": "Férias", "1021": "Férias - Abono ou gratificação de férias superior a 20 dias", "1022": "Férias - Abono ou gratificação de férias não excedente a 20 dias", "1023": "Férias - Abono pecuniário", "1024": "Férias - Dobro na vigência do contrato", "1040": "Licença-prêmio", "1041": "Licença-prêmio indenizada", "1050": "Remuneração de dias de afastamento", "1080": "Stock option", "1099": "Outras verbas salariais", "1201": "Adicional de função / cargo confiança", "1202": "Adicional de insalubridade", "1203": "Adicional de periculosidade", "1204": "Adicional de transferência", "1205": "Adicional noturno", "1206": "Adicional por tempo de serviço", "1207": "Comissões, porcentagens, produção", "1208": "Gueltas ou gorjetas - Repassadas por fornecedores ou clientes", "1209": "Gueltas ou gorjetas - Repassadas pelo empregador", "1210": "Gratificação por acordo ou convenção coletiva", "1211": "Gratificações", "1212": "Gratificações ou outras verbas de natureza permanente", "1213": "Gratificações ou outras verbas de natureza transitória", "1214": "Adicional de penosidade", "1215": "Adicional de unidocência", "1216": "Adicional de localidade", "1217": "Gratificação de curso/concurso", "1225": "Quebra de caixa", "1230": "Remuneração do dirigente sindical", "1299": "Outros adicionais", "1300": "PLR - Participação em Lucros ou Resultados", "1350": "Bolsa de estudo - Estagiário", "1351": "Bolsa de estudo - Médico residente", "1352": "Bolsa de estudo ou pesquisa", "1401": "Abono", "1402": "Abono PIS/PASEP", "1403": "Abono legal", "1404": "Auxílio babá", "1405": "Assistência médica", "1406": "Auxílio-creche", "1407": "Auxílio-educação", "1409": "Salário-família", "1410": "Auxílio - Locais de difícil acesso", "1411": "Auxílio-natalidade", "1412": "Abono permanência", "1601": "Ajuda de custo - Aeronauta", "1602": "Ajuda de custo de transferência", "1603": "Ajuda de custo", "1604": "Ajuda de custo - Acima de 50% da remuneração mensal", "1619": "Ajuda compensatória - Programa Emergencial de Manutenção do Emprego e da Renda", "1620": "Ressarcimento de despesas pelo uso de veículo próprio", "1621": "Ressarcimento de despesas de viagem, exceto despesas com veículos", "1623": "Ressarcimento de provisão", "1629": "Ressarcimento de outras despesas", "1650": "Diárias de viagem", "1651": "Diárias de viagem - Até 50% do salário", "1652": "Diárias de viagem - Acima de 50% do salário", "1799": "Alimentação concedida em pecúnia com caráter indenizatório", "1800": "Alimentação concedida em pecúnia", "1801": "Alimentação", "1802": "Etapas (marítimos)", "1805": "Moradia", "1806": "Alimentação em ticket ou cartão, vinculada ao PAT", "1807": "Alimentação em ticket ou cartão, não vinculada ao PAT", "1808": "Cesta básica ou refeição, vinculada ao PAT", "1809": "Cesta básica ou refeição, não vinculada ao PAT", "1810": "Transporte", "1811": "Auxílio-transporte ou auxílio-combustível com caráter salarial", "1899": "Outros auxílios", "1901": "Juros e/ou atualização monetária", "2501": "Prêmios", "2502": "Liberalidades concedidas em mais de duas parcelas anuais", "2510": "Direitos autorais e intelectuais", "2801": "Quarentena remunerada", "2901": "Empréstimos", "2902": "Vestuário e equipamentos", "2903": "Vestuário e equipamentos", "2920": "Reembolsos diversos", "2930": "Insuficiência de saldo", "2999": "Arredondamentos", "3501": "Remuneração por prestação de serviços", "3505": "Retiradas (pró-labore) de diretores empregados", "3506": "Retiradas (pró-labore) de diretores não empregados", "3508": "Retiradas (pró-labore) de proprietários ou sócios", "3509": "Honorários a conselheiros", "3510": "Gratificação (jeton)", "3511": "Gratificação eleitoral", "3520": "Remuneração de cooperado", "3525": "Côngruas, prebendas e afins", "4010": "Complementação salarial de auxílio-doença", "4011": "Complemento de salário- mínimo - RPPS", "4050": "Salário-maternidade", "4051": "Salário-maternidade - 13° salário", "4052": "Salário-paternidade", "4053": "Salário-paternidade - 13° salário", "5001": "13º salário", "5005": "13° salário complementar", "5501": "Adiantamento de salário", "5504": "13º salário - Adiantamento", "5510": "Adiantamento de benefícios previdenciários", "6000": "Saldo de salários na rescisão contratual", "6001": "13º salário relativo ao aviso prévio indenizado", "6002": "13° salário proporcional na rescisão", "6003": "Indenização compensatória do aviso prévio", "6004": "Férias - Dobro na rescisão", "6006": "Férias proporcionais", "6007": "Férias vencidas na rescisão", "6101": "Indenização compensatória - Multa rescisória 20 ou 40% (CF/88)", "6102": "Indenização do art. 9º da Lei 7.238/1984", "6103": "Indenização do art. 14 da Lei 5.889/1973", "6104": "Indenização do art. 479 da CLT", "6105": "Indenização recebida a título de incentivo a demissão", "6106": "Multa do art. 477 da CLT", "6107": "Indenização por quebra de estabilidade", "6108": "Tempo de espera do motorista profissional", "6119": "Indenização rescisória - Programa Emergencial de Manutenção do Emprego e da Renda", "6129": "Outras verbas não remuneratórias", "6901": "Desconto do aviso prévio", "6904": "Multa prevista no art. 480 da CLT", "7001": "Proventos", "7002": "Proventos - Pensão por morte Civil", "7003": "Proventos - Reserva", "7004": "Proventos - Reforma", "7005": "Pensão Militar", "7006": "Auxílio-reclusão", "7007": "Pensões especiais", "7008": "Complementação de aposentadoria/ pensão", "9200": "Desconto de adiantamentos", "9201": "Contribuição previdenciária", "9202": "Contribuição militar", "9203": "Imposto de Renda Retido na Fonte", "9205": "Provisão de contribuição previdenciária", "9207": "Faltas", "9208": "Atrasos", "9209": "Faltas ou atrasos", "9210": "DSR s/faltas e atrasos", "9211": "DSR sobre faltas", "9212": "DSR sobre atrasos", "9213": "Pensão alimentícia", "9214": "13° salário - Desconto de adiantamento", "9216": "Desconto de vale- transporte", "9217": "Contribuição a Outras Entidades e Fundos", "9218": "Retenções judiciais", "9219": "Desconto de assistência médica ou odontológica - Plano coletivo empresarial", "9220": "Alimentação - Desconto", "9221": "Desconto de férias", "9222": "Desconto de outros impostos e contribuições", "9223": "Previdência complementar - Parte do empregado", "9224": "FAPI - Parte do empregado", "9225": "Previdência complementar - Parte do servidor", "9226": "Desconto de férias - Abono", "9230": "Contribuição sindical laboral", "9231": "Mensalidade sindical ou associativa", "9232": "Contribuição sindical - Assistencial", "9233": "Contribuição sindical - Confederativa", "9240": "Alimentação concedida em pecúnia - Desconto", "9241": "Alimentação em ticket ou cartão, vinculada ao PAT - Desconto", "9242": "Alimentação em ticket ou cartão, não vinculada ao PAT - Desconto", "9243": "Cesta básica ou refeição, vinculada ao PAT - Desconto", "9244": "Cesta básica ou refeição, não vinculada ao PAT - Desconto", "9250": "Seguro de vida - Desconto", "9253": "Empréstimos eConsignado - Desconto", "9254": "Empréstimos consignados - Desconto", "9255": "Empréstimos do empregador - Desconto", "9258": "Convênios", "9260": "FIES - Desconto", "9270": "Danos e prejuízos causados pelo trabalhador", "9290": "Desconto de pagamento indevido em meses anteriores", "9291": "Abate-teto", "9292": "Ressarcimento ao erário", "9293": "Honorários advocatícios", "9294": "Redutor EC 41/03", "9299": "Outros descontos", "9901": "Base de cálculo da contribuição previdenciária", "9902": "Total da base de cálculo do FGTS", "9903": "Total da base de cálculo do IRRF", "9904": "Total da base de cálculo do FGTS rescisório", "9905": "Serviço militar", "9906": "Remuneração no exterior", "9907": "Total da contribuição da previdenciária patronal - RPPS", "9908": "FGTS - Depósito", "9910": "Seguros", "9911": "Assistência Médica", "9912": "Desconto de assistência médica ou odontológica - Plano diferente de coletivo empresarial", "9928": "Salário-paternidade pago pela Previdência Social", "9929": "Salário-paternidade pago pela Previdência Social - 13° salário", "9930": "Salário-maternidade pago pela Previdência Social", "9931": "Salário-maternidade pago pela Previdência Social - 13° salário", "9932": "Auxílio-doença acidentário", "9933": "Auxílio-doença", "9938": "Isenção IRRF - 65 anos", "9939": "Outros valores tributáveis", "9950": "Horas extraordinárias - Banco de horas", "9951": "Horas compensadas - Banco de horas", "9989": "Outros valores informativos"};
+
+const TAGMAP = {
+  evtInfoEmpregador: 'S-1000', evtTabEstab: 'S-1005', evtTabRubrica: 'S-1010',
+  evtRemun: 'S-1200', evtPgtos: 'S-1210', evtAfastTemp: 'S-2230', evtDeslig: 'S-2299',
+  evtAdmissao: 'S-2200', evtAltCadastral: 'S-2205', evtAltContratual: 'S-2206',
+  evtTSVInicio: 'S-2300', evtTSVTermino: 'S-2399', evtProcTrab: 'S-2500', evtContProc: 'S-2501',
+  evtBasesTrab: 'S-5001', evtIrrfBenef: 'S-5002', evtBasesFGTS: 'S-5003', evtCS: 'S-5011',
+  evtIrrf: 'S-5012', evtFGTS: 'S-5013', evtExclusao: 'S-3000', evtFechaEvPer: 'S-1299',
+  evtConsolidContProc: 'S-5501'
+};
+
+/* Tabelas previdenciárias (progressivas, EC 103/2019) — editáveis na tela. */
+const TABELA_INSS = {
+  2021: { teto: 6433.57, faixas: [[1100.00, 7.5], [2203.48, 9], [3305.22, 12], [6433.57, 14]] },
+  2022: { teto: 7087.22, faixas: [[1212.00, 7.5], [2427.35, 9], [3641.03, 12], [7087.22, 14]] },
+  2023: { teto: 7507.49, faixas: [[1320.00, 7.5], [2571.29, 9], [3856.94, 12], [7507.49, 14]] },
+  2024: { teto: 7786.02, faixas: [[1412.00, 7.5], [2666.68, 9], [4000.03, 12], [7786.02, 14]] },
+  2025: { teto: 8157.41, faixas: [[1518.00, 7.5], [2793.88, 9], [4190.83, 12], [8157.41, 14]] },
+  2026: { teto: 8475.55, faixas: [[1621.00, 7.5], [2902.84, 9], [4354.27, 12], [8475.55, 14]] }
+};
+
+function defaultParams() {
+  return {
+    hoje: new Date().toISOString().slice(0, 10),
+    aliqPatronal: 20,            // Lei 8.212/91, art. 22, I
+    aliqTerceiros: 5.8,          // padrão FPAS 515 (editável; ver Tabela 04 do Anexo I)
+    ratPadrao: 3,                // usado só se S-1005 não trouxer RAT (RAT x FAP em %)
+    fapPadrao: 1,
+    aliqFGTS: 8,                 // Lei 8.036/90, art. 15, caput
+    aliqFGTSAprendiz: 2,         // Lei 8.036/90, art. 15, §7º
+    irrfMarginal: 27.5,          // teto de estimativa; limitado à retenção informada em S-5002
+    deducaoDependente: 189.59,   // Lei 9.250/95, art. 4º, III (editável)
+    margemConsignado: 35,        // Lei 10.820/2003 (editável — conferir norma vigente)
+    regimeReal: 'auto',          // auto | 99 | 01 | 02 | 03
+    cprbReal: false,
+    regimeDe: '', regimeAte: '',
+    cnaeRat: {},                 // { '4711301': 3 }  (CSV opcional: Anexo V do Decreto 3.048/99)
+    tabelaInss: JSON.parse(JSON.stringify(TABELA_INSS)),
+    toleranciaTeto: 0.05,
+    maternidadeTerceiros: false,
+    ativas: null                 // null = todas as regras
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Catálogo de regras                                                  */
+/* ------------------------------------------------------------------ */
+const L = {
+  s8212_9d: 'Lei 8.212/91, art. 28, §9º, "d"',
+  fgts156: 'Lei 8.036/90, art. 15, §6º (remete ao rol do art. 28, §9º, da Lei 8.212/91)'
+};
+const RULES = {
+  'CP-01': { tributo: 'INSS', conf: 'Alta', titulo: 'Verba não integrante do salário de contribuição com incidência previdenciária (S-1010)',
+    legal: ['Lei 8.212/91, art. 28, §9º (alíneas e itens indicados em cada achado) c/c art. 22, I, II e III', 'Leiaute S-1.3, S-1010: campo codIncCP; Anexo I, Tabela 03 (natRubr)'],
+    acao: 'Retificar a rubrica no S-1010 (alteração do codIncCP para 00, com o mesmo período de validade) e retificar os S-1200/S-2299 afetados; DCTFWeb retificadora; crédito via PER/DCOMP Web (pagamento indevido ou a maior).' },
+  'CP-02': { tributo: 'INSS', conf: 'Alta', titulo: 'Salário-maternidade pago pela empresa com contribuição patronal (codIncCP 21/22)',
+    legal: ['STF, RE 576.967/PR (Tema 72 da repercussão geral) [VERIFICAR FONTE OFICIAL]', 'Parecer SEI nº 19.424/2020/ME (vinculação da RFB ao Tema 72) [VERIFICAR FONTE OFICIAL]', 'Lei 8.212/91, art. 28, §2º e §9º, "a" (a contribuição do segurado permanece devida)'],
+    acao: 'A tese afasta a cota patronal (e, conforme o caso, RAT); a contribuição do segurado não é afetada. Conferir a forma de parametrização do S-1010 que preserve a base do segurado e excluir a base patronal; avaliar a via administrativa (PER/DCOMP) ou judicial. Terceiros: tese a confirmar.' },
+  'CP-03': { tributo: 'INSS', conf: 'Média', titulo: 'Remuneração dos 15 primeiros dias de afastamento por doença/acidente com incidência previdenciária',
+    legal: ['Lei 8.213/91, art. 60, §3º (empresa paga o salário integral nos 15 primeiros dias)', 'STJ, REsp 1.230.957/RS (Tema 738) [VERIFICAR FONTE OFICIAL]', 'Leiaute S-2230 (codMotAfast 01 e 03 — Tabela 18)'],
+    acao: 'Apurar a remuneração dos dias efetivamente cobertos pela empresa nos 15 primeiros dias; ajustar a incidência da rubrica e retificar S-1200. Valores estimados exigem conferência na folha.' },
+  'CP-04': { tributo: 'INSS', conf: 'Alta', titulo: 'Diárias de viagem dentro de 50% da remuneração mensal com incidência previdenciária',
+    legal: ['Lei 8.212/91, art. 28, §8º, "a", e §9º, "h"', 'Leiaute S-1.3, Tabela 03 (natRubr 1650)'],
+    acao: 'Confirmar comprovação das viagens e a proporção; retificar a incidência (codIncCP 00) e os eventos S-1200 do período.' },
+  'CP-05': { tributo: 'INSS', conf: 'Média', titulo: 'Tese a revisar: rubrica com natureza de baixa segurança jurídica tributada',
+    legal: ['Lei 8.212/91, art. 28, §9º (conforme alínea indicada)', 'Jurisprudência indicada em cada achado [VERIFICAR FONTE OFICIAL]'],
+    acao: 'Verificar requisitos legais da exclusão (ex.: PLR conforme Lei 10.101/2000; assistência médica extensiva a todos os empregados) antes de retificar.' },
+  'CP-R1': { tributo: 'INSS', kind: 'risco', conf: 'Média', titulo: 'Risco: terço de férias gozadas sem incidência previdenciária',
+    legal: ['STF, RE 1.072.485/PR (Tema 985) [VERIFICAR FONTE OFICIAL]', 'Lei 8.212/91, art. 22, I'],
+    acao: 'Contingência: verificar se há decisão judicial favorável (S-1070/codIncCP 9X). Sem decisão, a não incidência expõe a empresa a lançamento.' },
+  'SEG-01': { tributo: 'INSS', conf: 'Alta', titulo: 'Contribuição descontada do segurado superior à calculada pelo eSocial (S-5001)',
+    legal: ['Leiaute S-5001: infoCpCalc (vrCpSeg × vrDescSeg)', 'Lei 8.212/91, art. 20 e art. 28, §5º'],
+    acao: 'O excedente descontado deve ser devolvido ao trabalhador; a empresa o recupera por compensação (Lei 11.457/2007, art. 26-A; Lei 9.430/96, art. 74). Conferir a rubrica de desconto (codIncCP 31/32).' },
+  'SEG-02': { tributo: 'INSS', conf: 'Alta', titulo: 'Contribuição do segurado acima do máximo permitido pelo teto (múltiplos vínculos / S-1200 infoMV)',
+    legal: ['Lei 8.212/91, art. 28, §5º (limite máximo do salário de contribuição do SEGURADO)', 'Leiaute S-1200: infoMV/indMV (1, 2 ou 3) e remunOutrEmpr', 'Portarias Interministeriais MPS/MF anuais (teto e faixas)'],
+    acao: 'Crédito do segurado: a empresa devolve ao trabalhador e compensa. ATENÇÃO: a cota patronal (art. 22 da Lei 8.212/91) não tem teto; o teto não gera crédito patronal.' },
+  'ENQ-01': { tributo: 'INSS', conf: 'Média', titulo: 'Classificação tributária (S-1000) divergente do regime real informado',
+    legal: ['Leiaute S-1000: classTrib (Tabela 08) e indDesFolha', 'LC 123/2006, art. 13, §3º (Simples: dispensa de contribuições a terceiros)', 'Lei 12.546/2011, arts. 7º a 9º (CPRB)'],
+    acao: 'Corrigir S-1000 (alteração com novo período) e retificar S-1200/S-2299; para Simples substituído o crédito segue o PGDAS-D, não a DCTFWeb. CPRB: confrontar com EFD-Reinf R-2060.' },
+  'ENQ-02': { tributo: 'INSS', conf: 'Baixa', kind: 'conferencia', titulo: 'Possível enquadramento na CPRB (desoneração) não adotado',
+    legal: ['Lei 12.546/2011, arts. 7º a 9º', 'Lei 14.973/2024 (transição) [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1000: indDesFolha'],
+    acao: 'Valor é limite máximo (patronal paga); o crédito líquido depende da CPRB devida (receita bruta). Não apurável apenas pelos XML.' },
+  'RAT-01': { tributo: 'RAT/FAP', kind: 'conferencia', conf: 'Alta', titulo: 'FAP fora do intervalo legal (0,5000 a 2,0000)',
+    legal: ['Lei 10.666/2003, art. 10', 'Decreto 3.048/99, art. 202-A [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1005: aliqGilrat/fap'],
+    acao: 'Corrigir o FAP no S-1005 e retificar; conferir a Tabela FAP do ano.' },
+  'RAT-02': { tributo: 'RAT/FAP', kind: 'conferencia', conf: 'Alta', titulo: 'Alíquota RAT ajustada diverge de RAT × FAP (S-5011)',
+    legal: ['Leiaute S-5011: infoEstab/aliqRatAjust = aliqRat × fap'],
+    acao: 'Conferir o retorno do S-5011 e o S-1005; reenviar tabelas e retificar se necessário.' },
+  'RAT-03': { tributo: 'RAT/FAP', conf: 'Média', titulo: 'Alíquota RAT informada diverge do grau de risco do CNAE preponderante',
+    legal: ['Lei 8.212/91, art. 22, II (1%, 2% ou 3%)', 'Decreto 3.048/99, Anexo V (grau de risco por CNAE) [VERIFICAR FONTE OFICIAL]', 'STJ, Súmula 351 [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1005: cnaePrep, aliqRat'],
+    acao: 'Confirmar o CNAE preponderante (critério do Decreto 3.048/99, art. 202, §3º [VERIFICAR FONTE OFICIAL]) e corrigir o S-1005; o aliqRat só deve ser informado quando divergir da legislação, com processo (procAdmJudRat).' },
+  'RAT-04': { tributo: 'RAT/FAP', kind: 'conferencia', conf: 'Média', titulo: 'aliqRat informado no S-1005 sem processo administrativo/judicial associado',
+    legal: ['Leiaute S-1005: aliqRat ("quando divergente da legislação" — exige procAdmJudRat)'],
+    acao: 'Remover o aliqRat ou cadastrar o processo; retificar.' },
+  'RAT-05': { tributo: 'RAT/FAP', conf: 'Alta', titulo: 'RAT/FAP efetivo superior ao de referência legal (S-5011 infoEstabRef)',
+    legal: ['Leiaute S-5011: infoEstab × infoEstabRef'],
+    acao: 'Conferir a origem da divergência (processo/ajuste) e retificar.' },
+  'RAT-06': { tributo: 'RAT/FAP', conf: 'Baixa', kind: 'conferencia', titulo: 'Estabelecimentos do mesmo CNPJ com RAT distinto',
+    legal: ['STJ, Súmula 351 [VERIFICAR FONTE OFICIAL]', 'Decreto 3.048/99, art. 202 [VERIFICAR FONTE OFICIAL]'],
+    acao: 'Verificar o enquadramento por CNPJ/estabelecimento.' },
+  'FG-01': { tributo: 'FGTS', conf: 'Alta', titulo: 'FGTS sobre parcela excluída do conceito de remuneração (S-1010 codIncFGTS)',
+    legal: ['Lei 8.036/90, art. 15, §6º c/c Lei 8.212/91, art. 28, §9º (alínea indicada)', 'Leiaute S-1010: codIncFGTS (11, 12, 21)'],
+    acao: 'Corrigir codIncFGTS para 00 e retificar. O FGTS recolhido a maior NÃO é compensável via PER/DCOMP: a restituição segue o procedimento do Agente Operador (CAIXA) [VERIFICAR FONTE OFICIAL]; o crédito integra a conta vinculada do trabalhador.' },
+  'FG-02': { tributo: 'FGTS', conf: 'Alta', titulo: 'Depósito de FGTS (S-5003) superior à alíquota legal sobre a base',
+    legal: ['Lei 8.036/90, art. 15, caput (8%) e §7º (2% aprendiz)', 'Leiaute S-5003: remFGTS, dpsFGTS'],
+    acao: 'Conferir a guia FGTS Digital e a categoria do trabalhador; restituição via CAIXA.' },
+  'FG-03': { tributo: 'FGTS', kind: 'conferencia', conf: 'Alta', titulo: 'Multa rescisória (natRubr 6101) lançada em desligamento sem direito à multa',
+    legal: ['Lei 8.036/90, art. 18, §1º (40%); CLT, art. 484-A (20% no acordo)', 'Leiaute S-2299: mtvDeslig (Tabela 19)'],
+    acao: 'Pagamento sem causa legal aparente: verificar a origem da rubrica 6101 e o motivo do desligamento; eventual valor pago indevidamente é crédito contra o trabalhador, não crédito tributário.' },
+  'FG-04': { tributo: 'FGTS', conf: 'Média', kind: 'conferencia', titulo: 'Conferência da multa rescisória (percentual esperado pelo motivo do desligamento)',
+    legal: ['Lei 8.036/90, art. 18, §1º e §2º; CLT, art. 484-A', 'Leiaute S-2299: mtvDeslig'],
+    acao: 'A multa NÃO consta nos XML do eSocial (depende do saldo da conta vinculada): conferir GRRF/extrato do FGTS.' },
+  'FG-R1': { tributo: 'FGTS', kind: 'risco', conf: 'Alta', titulo: 'Risco: aviso prévio indenizado (e reflexo no 13º) sem FGTS',
+    legal: ['TST, Súmula 305 [VERIFICAR FONTE OFICIAL]', 'Lei 8.036/90, art. 15', 'MOS S-1.3, S-1010, item 9.1 (codIncFGTS 21 ou 93)'],
+    acao: 'Parametrizar codIncFGTS = 21 (ou 93, se houver decisão) e regularizar.' },
+  'IR-01': { tributo: 'IRRF', conf: 'Alta', titulo: 'Verba indenizatória/isenta tributada no IRRF (S-1010 codIncIRRF)',
+    legal: ['Lei 7.713/88, art. 6º, V', 'STJ, Súmulas 125, 136, 215 e 386 (conforme o achado) [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1.3, Tabela 21 (códigos 72 a 79)'],
+    acao: 'Alterar o codIncIRRF da rubrica para o código de isenção (Tabela 21), retificar S-1200/S-2299 e S-1210; restituição/compensação via PER/DCOMP Web. Valor é teto estimado: o IRRF exato exige recálculo da base.' },
+  'IR-02': { tributo: 'IRRF', conf: 'Alta', titulo: 'Dedução (previdência/pensão) não refletida na base do IRRF',
+    legal: ['Lei 9.250/95, art. 4º, II (pensão alimentícia) e V (previdência)', 'Leiaute S-1010: codIncIRRF 41-43, 46-48, 51-54, 61-66 (Tabela 21)'],
+    acao: 'Corrigir o codIncIRRF da rubrica de desconto e retificar; valor é teto estimado.' },
+  'IR-03': { tributo: 'IRRF', conf: 'Média', titulo: 'Dedução por dependentes aplicada a menor (S-5002)',
+    legal: ['Lei 9.250/95, art. 4º, III', 'Leiaute S-5002: ideDep × dedDepen/vlrDedDep'],
+    acao: 'Conferir cadastro de dependentes (depIRRF) e o valor unitário vigente; retificar S-1200/S-1210.' },
+  'IR-04': { tributo: 'IRRF', conf: 'Alta', titulo: 'IRRF retido sem rendimento tributável correspondente (S-5002)',
+    legal: ['Leiaute S-5002: totApurMen (vlrCRMen × vlrRendTrib)', 'CTN, art. 165, I'],
+    acao: 'Verificar a origem da retenção; retificar eventos e pleitear restituição.' },
+  'IR-05': { tributo: 'IRRF', conf: 'Média', titulo: 'Reclamatória (S-2501): IRRF retido sem rendimento tributável',
+    legal: ['Leiaute S-2501: infoCRIRRF (vrCR × infoIR/vrRendTrib)'],
+    acao: 'Verificar a decisão/acordo e retificar o S-2501.' },
+  'PT-01': { tributo: 'PROC. TRABALHISTA', conf: 'Média', titulo: 'Base previdenciária informada em processo sem repercussão tributária (S-2500)',
+    legal: ['Leiaute S-2500: indReperc (2, 3 e 4) × baseCalculo/vrBcCpMensal'],
+    acao: 'Conferir a natureza das parcelas (indenizatórias × salariais) e retificar o S-2500/S-2501 antes do recolhimento via DCTFWeb.' },
+  'PT-02': { tributo: 'PROC. TRABALHISTA', conf: 'Baixa', titulo: 'Contribuições do S-2501 superiores ao máximo teórico sobre a base do S-2500',
+    legal: ['Lei 8.212/91, art. 22 (patronal, RAT) e art. 20 (segurado); Leiaute S-2500/S-2501'],
+    acao: 'Conferir a apuração; o limite teórico usa os parâmetros configurados.' },
+  'CS-01': { tributo: 'CONSIGNADO', conf: 'Alta', titulo: 'Desconto de consignado em duplicidade (mesmo contrato/competência)',
+    legal: ['Leiaute S-1200/S-2299: descFolha (tpDesc, instFinanc, nrDoc)', 'Lei 10.820/2003 [VERIFICAR FONTE OFICIAL]'],
+    acao: 'Conferir com a instituição financeira e devolver ao trabalhador o valor duplicado.' },
+  'CS-02': { tributo: 'CONSIGNADO', conf: 'Alta', titulo: 'Desconto de consignado em competência posterior ao desligamento',
+    legal: ['Leiaute S-2299 (dtDeslig) × S-1200/descFolha'],
+    acao: 'Verificar a regularidade do desconto e devolver ao trabalhador.' },
+  'CS-03': { tributo: 'CONSIGNADO', conf: 'Baixa', kind: 'conferencia', titulo: 'Soma dos consignados acima da margem configurada',
+    legal: ['Lei 10.820/2003, art. 2º [VERIFICAR FONTE OFICIAL]'],
+    acao: 'A margem legal incide sobre remuneração disponível; este alerta é apenas indício.' },
+  'CS-04': { tributo: 'CONSIGNADO', conf: 'Alta', kind: 'conferencia', titulo: 'Rubrica eConsignado (natRubr 9253) com incidências fora do padrão',
+    legal: ['MOS S-1.3, S-1010, item 20.1: codIncFGTS [31], codIncCP [00], codIncIRRF [9]'],
+    acao: 'Corrigir S-1010 (alteração).' },
+  'INT-01': { tributo: 'GERAL', kind: 'conferencia', conf: 'Alta', titulo: 'Rubrica utilizada sem cadastro no S-1010 enviado',
+    legal: ['Leiaute S-1200/S-2299: codRubr + ideTabRubr devem constar do S-1010'],
+    acao: 'Anexar o S-1010 correspondente para auditar a incidência dessa rubrica.' }
+};
+
+/* Regras por natureza de rubrica (Tabela 03) — bases legais conferidas */
+const TRIB_CP = ['11', '12', '13', '14'];
+const TRIB_FG = ['11', '12', '21'];
+const TRIB_IR = ['11', '12', '13', '14'];
+const NATR = {
+  '6006': { cp: ['28, §9º, "d" (férias indenizadas e adicional)', 'Alta'], fg: ['28, §9º, "d"', 'Alta'], ir: ['STJ, Súmula 386 (férias proporcionais indenizadas) [VERIFICAR FONTE OFICIAL]', 'Alta'] },
+  '6007': { cp: ['28, §9º, "d" (férias indenizadas e adicional)', 'Alta'], fg: ['28, §9º, "d"', 'Alta'], ir: ['STJ, Súmula 125 (férias não gozadas) [VERIFICAR FONTE OFICIAL]', 'Alta'] },
+  '6004': { cp: ['28, §9º, "d" (dobra do art. 137 da CLT)', 'Alta'], fg: ['28, §9º, "d"', 'Média'] },
+  '1024': { cp: ['28, §9º, "d" (dobra do art. 137 da CLT)', 'Média'], fg: ['28, §9º, "d"', 'Média'] },
+  '1023': { cp: ['28, §9º, "e", item 6 (abono de férias, arts. 143 e 144 da CLT)', 'Alta'], fg: ['28, §9º, "e", item 6', 'Alta'], ir: ['Tabela 21, código 75 (abono pecuniário) — fundamento a confirmar [VERIFICAR FONTE OFICIAL]', 'Média'] },
+  '1041': { cp: ['28, §9º, "e", item 8 (licença-prêmio indenizada)', 'Alta'], fg: ['28, §9º, "e", item 8', 'Alta'], ir: ['STJ, Súmula 136 [VERIFICAR FONTE OFICIAL]', 'Alta'] },
+  '6101': { cp: ['8.036/90, art. 18, §1º (multa rescisória do FGTS não é remuneração) [VERIFICAR FONTE OFICIAL]', 'Média'], ir: ['Lei 7.713/88, art. 6º, V (indenização por rescisão do contrato de trabalho e FGTS)', 'Alta'] },
+  '6102': { cp: ['28, §9º, "e", item 9 (Lei 7.238/84, art. 9º)', 'Alta'], fg: ['28, §9º, "e", item 9', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V', 'Média'] },
+  '6103': { cp: ['28, §9º, "e", item 4 (Lei 5.889/73, art. 14)', 'Alta'], fg: ['28, §9º, "e", item 4', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V', 'Média'] },
+  '6104': { cp: ['28, §9º, "e", item 3 (CLT, art. 479)', 'Alta'], fg: ['28, §9º, "e", item 3', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V', 'Média'] },
+  '6105': { cp: ['28, §9º, "e", item 5 (incentivo à demissão)', 'Alta'], fg: ['28, §9º, "e", item 5', 'Alta'], ir: ['STJ, Súmula 215 [VERIFICAR FONTE OFICIAL]', 'Alta'] },
+  '1403': { cp: ['28, §9º, "e", item 7 (ganhos eventuais e abonos desvinculados)', 'Alta'], fg: ['28, §9º, "e", item 7', 'Alta'] },
+  '1402': { cp: ['28, §9º, "l" (abono PIS/PASEP)', 'Alta'], fg: ['28, §9º, "l"', 'Alta'] },
+  '1810': { cp: ['28, §9º, "f" (vale-transporte); STF, RE 478.410 [VERIFICAR FONTE OFICIAL]', 'Alta'], fg: ['28, §9º, "f"', 'Alta'] },
+  '1806': { cp: ['28, §9º, "c" (PAT)', 'Alta'], fg: ['28, §9º, "c"', 'Alta'] },
+  '1808': { cp: ['28, §9º, "c" (PAT)', 'Alta'], fg: ['28, §9º, "c"', 'Alta'] },
+  '1602': { cp: ['28, §9º, "g" (ajuda de custo única por mudança de local — CLT, art. 470) [VERIFICAR FONTE OFICIAL]', 'Média'], fg: ['28, §9º, "g"', 'Média'] },
+  '6003': { cp: ['STJ, REsp 1.230.957/RS (Tema 478) — aviso prévio indenizado [VERIFICAR FONTE OFICIAL]', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V (aviso prévio)', 'Alta'] },
+  /* teses (CP-05) */
+  '1300': { cp5: ['28, §9º, "j" (PLR — exige Lei 10.101/2000)', 'Média'], fg: ['28, §9º, "j"', 'Média'] },
+  '1405': { cp5: ['28, §9º, "q" (assistência médica/odontológica)', 'Média'] },
+  '1811': { cp5: ['28, §9º, "f"; STF, RE 478.410 (VT em pecúnia) [VERIFICAR FONTE OFICIAL]', 'Baixa'] },
+  '6107': { cp5: ['28, §9º, "e" (indenização por quebra de estabilidade — enquadramento a verificar) [VERIFICAR FONTE OFICIAL]', 'Baixa'] }
+};
+const IRRF_PENSAO = ['51', '52', '53', '54', '9051', '9052', '9053', '9054'];
+const IRRF_PSO = ['41', '42', '43', '9041', '9042', '9043'];
+const IRRF_PC = ['46', '47', '48', '61', '62', '63', '64', '65', '66', '9046', '9047', '9048', '9061', '9062', '9063', '9064', '9065', '9066'];
+const MULTA = { '02': 40, '03': 40, '17': 40, '05': 20, '33': 20, '01': 0, '04': 0, '06': 0, '07': 0, '08': 0 };
+
+/* ------------------------------------------------------------------ */
+/* Utilitários                                                          */
+/* ------------------------------------------------------------------ */
+const ln = (el) => el.localName || String(el.nodeName).replace(/^.*:/, '');
+function kids(el, name) { const r = []; if (!el) return r; for (let c = el.firstElementChild; c; c = c.nextElementSibling) if (ln(c) === name) r.push(c); return r; }
+function kid(el, name) { if (!el) return null; for (let c = el.firstElementChild; c; c = c.nextElementSibling) if (ln(c) === name) return c; return null; }
+function val(el, name) { const k = kid(el, name); return k ? k.textContent.trim() : ''; }
+function desc(el, name) { const r = []; if (!el) return r; const a = el.getElementsByTagName('*'); for (let i = 0; i < a.length; i++) if (!name || ln(a[i]) === name) r.push(a[i]); return r; }
+const num = (s) => { const v = parseFloat(String(s == null ? '' : s).replace(',', '.')); return isFinite(v) ? v : 0; };
+const r2 = (x) => Math.round((x + Number.EPSILON) * 100) / 100;
+const normPer = (p) => (/^\d{4}$/.test(p) ? p + '-12' : p || '');
+const digits = (s) => String(s || '').replace(/\D/g, '');
+const yearOf = (per) => parseInt(String(per).slice(0, 4), 10);
+function sum(arr, f) { let t = 0; for (const x of arr) t += f ? f(x) : x; return t; }
+
+function inccp(c) { return c === '00' ? 'não é base' : c; }
+
+/* ------------------------------------------------------------------ */
+/* Contexto e ingestão                                                  */
+/* ------------------------------------------------------------------ */
+function createContext(params) {
+  const P = Object.assign(defaultParams(), params || {});
+  return { P, files: 0, bytes: 0, events: 0, counts: {}, warnings: [], parseErrors: [], emp: [], estabs: {}, rub: {}, rubExcl: {},
+    byKey: {}, s1200: [], s2299: [], afast: [], b5001: {}, ir5002: {}, fg5003: {}, cs5011: {}, p2500: [], c2501: [], desligs: [], findings: [], dups: 0 };
+}
+
+function ingestDoc(ctx, doc, file) {
+  const all = doc.getElementsByTagName('*');
+  let found = 0;
+  for (let i = 0; i < all.length; i++) {
+    const e = all[i]; const name = ln(e);
+    if (!/^evt[A-Z]/.test(name)) continue;
+    const p = e.parentNode; if (!p || ln(p) !== 'eSocial') continue;
+    found++;
+    const type = TAGMAP[name] || name;
+    ctx.events++; ctx.counts[type] = (ctx.counts[type] || 0) + 1;
+    try { dispatch(ctx, type, e, { file }); } catch (err) { ctx.warnings.push(file + ' (' + type + '): ' + err.message); }
+  }
+  if (!found) ctx.warnings.push(file + ': nenhum evento eSocial (evt*) localizado.');
+}
+
+function dispatch(ctx, type, e, meta) {
+  switch (type) {
+    case 'S-1000': return inS1000(ctx, e);
+    case 'S-1005': return inS1005(ctx, e);
+    case 'S-1010': return inS1010(ctx, e, meta);
+    case 'S-1200': return inS1200(ctx, e, meta);
+    case 'S-2299': return inS2299(ctx, e, meta);
+    case 'S-2230': return inS2230(ctx, e);
+    case 'S-5001': return inS5001(ctx, e, meta);
+    case 'S-5002': return inS5002(ctx, e, meta);
+    case 'S-5003': return inS5003(ctx, e, meta);
+    case 'S-5011': return inS5011(ctx, e);
+    case 'S-2500': return inS2500(ctx, e);
+    case 'S-2501': return inS2501(ctx, e);
+    default: return;
+  }
+}
+
+function inS1000(ctx, e) {
+  const info = kid(e, 'infoEmpregador'); if (!info) return;
+  ctx.nrInsc = ctx.nrInsc || val(kid(e, 'ideEmpregador'), 'nrInsc');
+  for (const op of ['inclusao', 'alteracao']) {
+    const o = kid(info, op); if (!o) continue;
+    const ic = kid(o, 'infoCadastro'); if (!ic) continue;
+    const ip = kid(o, 'idePeriodo');
+    ctx.emp.push({ ini: val(ip, 'iniValid'), fim: val(ip, 'fimValid'), classTrib: val(ic, 'classTrib'), indDesFolha: val(ic, 'indDesFolha'), indCoop: val(ic, 'indCoop'), indConstr: val(ic, 'indConstr') });
+  }
+}
+function empAt(ctx, per) {
+  const p = normPer(per); let r = null;
+  for (const x of ctx.emp) if (x.ini <= p && (!x.fim || p <= x.fim)) r = x;
+  return r || ctx.emp[ctx.emp.length - 1] || null;
+}
+
+function inS1005(ctx, e) {
+  const info = kid(e, 'infoEstab'); if (!info) return;
+  for (const op of ['inclusao', 'alteracao']) {
+    const o = kid(info, op); if (!o) continue;
+    const ide = kid(o, 'ideEstab'); const de = kid(o, 'dadosEstab'); if (!ide || !de) continue;
+    const g = kid(de, 'aliqGilrat');
+    const nv = kid(o, 'novaValidade');
+    const nr = val(ide, 'nrInsc');
+    (ctx.estabs[nr] = ctx.estabs[nr] || []).push({
+      ini: nv ? val(nv, 'iniValid') : val(ide, 'iniValid'), fim: nv ? val(nv, 'fimValid') : val(ide, 'fimValid'),
+      cnae: val(de, 'cnaePrep'), aliqRat: g ? val(g, 'aliqRat') : '', fap: g ? val(g, 'fap') : '',
+      procRat: g ? !!kid(g, 'procAdmJudRat') : false, procFap: g ? !!kid(g, 'procAdmJudFap') : false
+    });
+  }
+}
+function estabAt(ctx, nr, per) {
+  const arr = ctx.estabs[nr]; if (!arr) return null; const p = normPer(per); let r = null;
+  for (const x of arr) if (x.ini <= p && (!x.fim || p <= x.fim)) r = x;
+  return r || arr[arr.length - 1];
+}
+
+function inS1010(ctx, e, meta) {
+  const info = kid(e, 'infoRubrica'); if (!info) return;
+  for (const op of ['inclusao', 'alteracao', 'exclusao']) {
+    const o = kid(info, op); if (!o) continue;
+    const ide = kid(o, 'ideRubrica'); if (!ide) continue;
+    const key = val(ide, 'ideTabRubr') + '|' + val(ide, 'codRubr');
+    if (op === 'exclusao') { (ctx.rubExcl[key] = ctx.rubExcl[key] || []).push({ ini: val(ide, 'iniValid'), fim: val(ide, 'fimValid') }); continue; }
+    const dr = kid(o, 'dadosRubrica'); if (!dr) continue;
+    const nv = kid(o, 'novaValidade');
+    const rec = { tab: val(ide, 'ideTabRubr'), cod: val(ide, 'codRubr'), ini: nv ? val(nv, 'iniValid') : val(ide, 'iniValid'), fim: nv ? val(nv, 'fimValid') : val(ide, 'fimValid'),
+      dsc: val(dr, 'dscRubr'), nat: val(dr, 'natRubr'), tp: val(dr, 'tpRubr'), cp: val(dr, 'codIncCP'), irrf: val(dr, 'codIncIRRF'), fgts: val(dr, 'codIncFGTS'),
+      proc: desc(dr).some((x) => /^ideProcesso/.test(ln(x))), file: meta.file, op };
+    (ctx.rub[key] = ctx.rub[key] || []).push(rec);
+  }
+}
+function rubAt(ctx, tab, cod, per) {
+  const arr = ctx.rub[tab + '|' + cod]; if (!arr) return null; const p = normPer(per); let r = null;
+  for (const x of arr) if (x.ini <= p && (!x.fim || p <= x.fim)) r = x;
+  return r || arr[arr.length - 1];
+}
+
+function mkItem(base, it) {
+  const df = kid(it, 'descFolha');
+  return Object.assign({}, base, { tab: val(it, 'ideTabRubr'), cod: val(it, 'codRubr'), qtd: num(val(it, 'qtdRubr')), vr: num(val(it, 'vrRubr')),
+    cons: df ? { tp: val(df, 'tpDesc'), inst: val(df, 'instFinanc'), nr: val(df, 'nrDoc') } : null });
+}
+
+function storeLast(ctx, key, evt, list) {
+  const prev = ctx.byKey[key];
+  if (prev !== undefined) { ctx.dups++; list[prev] = evt; } else { ctx.byKey[key] = list.length; list.push(evt); }
+}
+
+function inS1200(ctx, e, meta) {
+  const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao');
+  const tr = kid(e, 'ideTrabalhador'); const cpf = val(tr, 'cpfTrab');
+  const mv = kid(tr, 'infoMV');
+  const evt = { type: 'S-1200', file: meta.file, cpf, per, ind, mv: mv ? { ind: val(mv, 'indMV'), outr: kids(mv, 'remunOutrEmpr').map((r) => ({ vr: num(val(r, 'vlrRemunOE')), cat: val(r, 'codCateg') })) } : null, items: [] };
+  for (const dm of kids(e, 'dmDev')) {
+    const base0 = { src: 'S-1200', cpf, per, file: meta.file, ideDm: val(dm, 'ideDmDev'), categ: val(dm, 'codCateg') };
+    const ipa = kid(dm, 'infoPerApur');
+    if (ipa) for (const lot of kids(ipa, 'ideEstabLot')) for (const rm of kids(lot, 'remunPerApur'))
+      for (const it of kids(rm, 'itensRemun')) evt.items.push(mkItem(Object.assign({}, base0, { mat: val(rm, 'matricula'), estab: val(lot, 'nrInsc'), indS: val(rm, 'indSimples'), perRef: per, ant: false }), it));
+    const ipt = kid(dm, 'infoPerAnt');
+    if (ipt) for (const adc of kids(ipt, 'ideADC')) for (const pr of kids(adc, 'idePeriodo')) for (const lot of kids(pr, 'ideEstabLot')) for (const rm of kids(lot, 'remunPerAnt'))
+      for (const it of kids(rm, 'itensRemun')) evt.items.push(mkItem(Object.assign({}, base0, { mat: val(rm, 'matricula'), estab: val(lot, 'nrInsc'), indS: val(rm, 'indSimples'), perRef: val(pr, 'perRef'), ant: true }), it));
+  }
+  storeLast(ctx, 'S-1200|' + cpf + '|' + per + '|' + ind, evt, ctx.s1200);
+}
+
+function inS2299(ctx, e, meta) {
+  const iv = kid(e, 'ideVinculo'); const id = kid(e, 'infoDeslig'); if (!id) return;
+  const cpf = val(iv, 'cpfTrab'), mat = val(iv, 'matricula'); const dt = val(id, 'dtDeslig'); const per = dt.slice(0, 7);
+  const evt = { type: 'S-2299', file: meta.file, cpf, mat, per, dtDeslig: dt, mtv: val(id, 'mtvDeslig'), items: [] };
+  const vr = kid(id, 'verbasResc');
+  if (vr) for (const dm of kids(vr, 'dmDev')) {
+    const base0 = { src: 'S-2299', cpf, mat, per, perRef: per, file: meta.file, ideDm: val(dm, 'ideDmDev'), categ: '', ant: false };
+    const ipa = kid(dm, 'infoPerApur');
+    if (ipa) for (const lot of kids(ipa, 'ideEstabLot')) for (const it of kids(lot, 'detVerbas')) evt.items.push(mkItem(Object.assign({}, base0, { estab: val(lot, 'nrInsc') }), it));
+    const ipt = kid(dm, 'infoPerAnt');
+    if (ipt) for (const adc of kids(ipt, 'ideADC')) for (const pr of kids(adc, 'idePeriodo')) for (const lot of kids(pr, 'ideEstabLot')) for (const it of kids(lot, 'detVerbas'))
+      evt.items.push(mkItem(Object.assign({}, base0, { estab: val(lot, 'nrInsc'), perRef: val(pr, 'perRef'), ant: true }), it));
+  }
+  storeLast(ctx, 'S-2299|' + cpf + '|' + mat, evt, ctx.s2299);
+}
+
+function inS2230(ctx, e) {
+  const iv = kid(e, 'ideVinculo'); const ia = kid(e, 'infoAfastamento'); if (!ia) return;
+  const ini = kid(ia, 'iniAfastamento'), fim = kid(ia, 'fimAfastamento');
+  ctx.afast.push({ cpf: val(iv, 'cpfTrab'), mat: val(iv, 'matricula'), ini: ini ? val(ini, 'dtIniAfast') : '', mot: ini ? val(ini, 'codMotAfast') : '', fim: fim ? val(fim, 'dtTermAfast') : '' });
+}
+
+function inS5001(ctx, e, meta) {
+  const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao'); const cpf = val(kid(e, 'ideTrabalhador'), 'cpfTrab');
+  const o = { cpf, per, ind, file: meta.file, calc: [], bases: [], terc: [] };
+  for (const c of desc(e, 'infoCpCalc')) o.calc.push({ cr: val(c, 'tpCR'), vrCpSeg: num(val(c, 'vrCpSeg')), vrDescSeg: num(val(c, 'vrDescSeg')) });
+  for (const ic of desc(e, 'infoCategIncid')) {
+    const mat = val(ic, 'matricula'), cat = val(ic, 'codCateg');
+    for (const b of kids(ic, 'infoBaseCS')) o.bases.push({ mat, cat, ind13: val(b, 'ind13'), tp: val(b, 'tpValor'), v: num(val(b, 'valor')) });
+    for (const t of kids(ic, 'calcTerc')) o.terc.push({ cr: val(t, 'tpCR'), v: num(val(t, 'vrCsSegTerc')), d: num(val(t, 'vrDescTerc')) });
+  }
+  ctx.b5001[cpf + '|' + per + '|' + ind] = o;
+}
+
+function inS5002(ctx, e, meta) {
+  const per = val(kid(e, 'ideEvento'), 'perApur'); const cpf = val(kid(e, 'ideTrabalhador'), 'cpfBenef');
+  const o = { cpf, per, file: meta.file, rendTrib: 0, rendTrib13: 0, cr: 0, cr13: 0, ded: 0, deps: {}, dmDev: 0 };
+  for (const d of desc(e, 'dmDev')) o.dmDev++;
+  for (const t of desc(e, 'totApurMen')) { o.rendTrib += num(val(t, 'vlrRendTrib')); o.rendTrib13 += num(val(t, 'vlrRendTrib13')); o.cr += num(val(t, 'vlrCRMen')); o.cr13 += num(val(t, 'vlrCR13Men')); }
+  for (const d of desc(e, 'dedDepen')) o.ded += num(val(d, 'vlrDedDep'));
+  for (const d of desc(e, 'ideDep')) { const c = val(d, 'cpfDep'); if (c) o.deps[c] = val(d, 'depIRRF'); }
+  ctx.ir5002[cpf + '|' + per] = o;
+}
+
+function inS5003(ctx, e, meta) {
+  const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao'); const cpf = val(kid(e, 'ideTrabalhador'), 'cpfTrab');
+  const o = { cpf, per, ind, file: meta.file, bases: [] };
+  for (const t of desc(e, 'infoTrabFGTS')) {
+    const mat = val(t, 'matricula'), cat = val(t, 'codCateg'), mtv = val(t, 'mtvDeslig');
+    for (const b of desc(t, 'basePerApur')) o.bases.push({ mat, cat, mtv, tp: val(b, 'tpValor'), incid: val(b, 'indIncid'), rem: num(val(b, 'remFGTS')), dps: num(val(b, 'dpsFGTS')) });
+  }
+  ctx.fg5003[cpf + '|' + per + '|' + ind] = o;
+}
+
+function inS5011(ctx, e) {
+  const per = val(kid(e, 'ideEvento'), 'perApur');
+  const o = { per, classTrib: '', estabs: [], cr: [], sm: 0, base00: 0 };
+  const ic = desc(e, 'infoContrib')[0]; if (ic) o.classTrib = val(ic, 'classTrib');
+  for (const ie of desc(e, 'ideEstab')) {
+    if (ln(ie.parentNode) !== 'infoCS') continue;
+    const inf = kid(ie, 'infoEstab'); const ref = inf ? kid(inf, 'infoEstabRef') : null;
+    const est = { nr: val(ie, 'nrInsc'), aliqRat: inf ? num(val(inf, 'aliqRat')) : 0, fap: inf ? num(val(inf, 'fap')) : 0, ajust: inf ? num(val(inf, 'aliqRatAjust')) : 0,
+      ref: ref ? { aliqRat: num(val(ref, 'aliqRat')), fap: num(val(ref, 'fap')), ajust: num(val(ref, 'aliqRatAjust')) } : null, base: 0, cr: [] };
+    for (const b of desc(ie, 'basesCp')) est.base += num(val(b, 'vrBcCp00'));
+    for (const b of desc(ie, 'basesCp13')) est.base += num(val(b, 'vrBcCp00'));
+    for (const b of desc(ie, 'basesCp')) o.sm += num(val(b, 'vrSalMat'));
+    for (const c of kids(ie, 'infoCREstab')) est.cr.push({ cr: val(c, 'tpCR'), v: num(val(c, 'vrCR')) });
+    o.estabs.push(est);
+  }
+  for (const c of kids(kid(e, 'infoCS'), 'infoCRContrib')) o.cr.push({ cr: val(c, 'tpCR'), v: num(val(c, 'vrCR')) });
+  ctx.cs5011[per] = o;
+}
+
+function inS2500(ctx, e) {
+  const ip = kid(e, 'infoProcesso'); const nr = val(ip, 'nrProcTrab');
+  for (const it of desc(e, 'ideTrab')) {
+    const cpf = val(it, 'cpfTrab');
+    for (const iv of desc(it, 'infoVlr')) {
+      let b = 0, b13 = 0; for (const bc of desc(iv, 'baseCalculo')) { b += num(val(bc, 'vrBcCpMensal')); b13 += num(val(bc, 'vrBcCp13')); }
+      ctx.p2500.push({ nr, cpf, rep: val(iv, 'indReperc'), ini: val(iv, 'compIni'), fim: val(iv, 'compFim'), sd: val(iv, 'indenSD'), ab: val(iv, 'indenAbono'), b, b13 });
+    }
+  }
+}
+function inS2501(ctx, e) {
+  const nr = val(kid(e, 'ideProc'), 'nrProcTrab');
+  for (const it of desc(e, 'ideTrab')) {
+    const cpf = val(it, 'cpfTrab'); let cp = 0; const per = val(kid(e, 'ideProc'), 'perApurPgto');
+    for (const c of desc(it, 'infoCRContrib')) cp += num(val(c, 'vrCR'));
+    let ir = 0, rend = 0, iso = 0; for (const c of desc(it, 'infoCRIRRF')) { ir += num(val(c, 'vrCR')); for (const i of desc(c, 'infoIR')) { rend += num(val(i, 'vrRendTrib')); iso += num(val(i, 'vrRendIsenNTrib')); } }
+    ctx.c2501.push({ nr, cpf, per, cp, ir, rend, iso });
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Fundamentos de cálculo                                               */
+/* ------------------------------------------------------------------ */
+function maxContrib(P, year) {
+  const t = P.tabelaInss[year]; if (!t) return null;
+  let prev = 0, tot = 0; for (const [lim, al] of t.faixas) { tot += (lim - prev) * al / 100; prev = lim; } return r2(tot);
+}
+function contrib(P, year, base) {
+  const t = P.tabelaInss[year]; if (!t) return null;
+  const b = Math.min(base, t.teto); let prev = 0, tot = 0;
+  for (const [lim, al] of t.faixas) { if (b > prev) tot += (Math.min(b, lim) - prev) * al / 100; prev = lim; } return r2(tot);
+}
+
+function ratesFor(ctx, per, estabNr, indS) {
+  const P = ctx.P; const emp = empAt(ctx, per); const cls = emp ? emp.classTrib : '99';
+  const es = estabAt(ctx, estabNr, per);
+  let rat = P.ratPadrao * P.fapPadrao;
+  if (es && es.aliqRat) rat = num(es.aliqRat) * (es.fap ? num(es.fap) : 1);
+  else if (es && es.cnae && P.cnaeRat[es.cnae]) rat = P.cnaeRat[es.cnae] * (es.fap ? num(es.fap) : 1);
+  let pat = P.aliqPatronal, terc = P.aliqTerceiros, nota = '';
+  const subst = () => { pat = 0; rat = 0; terc = 0; };
+  if (cls === '01') { subst(); nota = 'Simples (CPP substituída): sem patronal no eSocial'; }
+  else if (cls === '02') terc = 0;
+  else if (cls === '03') { if (indS === '1') subst(); else if (indS === '2') terc = 0; }
+  else if (cls === '04') { pat = 3; rat = 0; terc = 0; nota = 'MEI (cota patronal reduzida) [VERIFICAR FONTE OFICIAL]'; }
+  else if (['21', '22', '60', '70', '80', '85'].includes(cls)) { nota = 'Classificação especial: alíquotas a conferir'; }
+  if (emp && emp.indDesFolha === '1') { pat = 0; nota = (nota ? nota + '; ' : '') + 'CPRB (indDesFolha=1): patronal considerada 0 (conferir proporção/EFD-Reinf R-2060)'; }
+  return { pat, rat, terc, tot: pat + rat + terc, nota, cls };
+}
+
+function addMonths(per, n) { const [y, m] = per.split('-').map(Number); const d = new Date(Date.UTC(y, m - 1 + n, 1)); return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0'); }
+function prazo(ctx, per) {
+  const p = normPer(per); if (!/^\d{4}-\d{2}$/.test(p)) return { status: 'n/d', limite: '', dias: null };
+  const [y, m] = p.split('-').map(Number);
+  const venc = new Date(Date.UTC(y, m, 20));
+  const lim = new Date(Date.UTC(y + 5, m, 20));
+  const hoje = new Date(ctx.P.hoje + 'T00:00:00Z');
+  const dias = Math.floor((lim - hoje) / 86400000);
+  return { status: dias < 0 ? 'Fora do prazo' : (dias < 180 ? 'Vence em <6 meses' : 'No prazo'), limite: lim.toISOString().slice(0, 10), dias, venc: venc.toISOString().slice(0, 10) };
+}
+
+function F(ctx, o) {
+  const r = RULES[o.rule]; if (!r) throw new Error('regra desconhecida ' + o.rule);
+  if (ctx.P.ativas && ctx.P.ativas.indexOf(o.rule) < 0) return;
+  const f = Object.assign({ id: ctx.findings.length + 1, tributo: r.tributo, titulo: r.titulo, conf: r.conf, kind: r.kind || 'credito', legal: r.legal.slice(), acao: r.acao, credito: 0, base: 0, cpf: '', mat: '', ref: '', per: '', det: '', files: [] }, o);
+  if (o.conf) f.conf = o.conf;
+  if (o.legalExtra) f.legal.unshift(o.legalExtra);
+  f.credito = r2(f.credito); f.base = r2(f.base);
+  f.prazo = prazo(ctx, f.per);
+  ctx.findings.push(f);
+}
+const nameOf = (nat) => (NAT[nat] ? NAT[nat] : 'natRubr ' + nat);
+
+/* ------------------------------------------------------------------ */
+/* Regras                                                               */
+/* ------------------------------------------------------------------ */
+function allItems(ctx) { const r = []; for (const e of ctx.s1200) for (const i of e.items) r.push(i); for (const e of ctx.s2299) for (const i of e.items) r.push(Object.assign({ mtv: e.mtv, dtDeslig: e.dtDeslig }, i)); return r; }
+
+function runRules(ctx) {
+  ctx.findings = []; const items = allItems(ctx);
+  const resolved = items.map((it) => ({ it, r: rubAt(ctx, it.tab, it.cod, it.per) }));
+
+  /* INT-01: rubricas sem cadastro */
+  const miss = {};
+  for (const { it, r } of resolved) if (!r) { const k = it.tab + '|' + it.cod; (miss[k] = miss[k] || { n: 0, v: 0, per: it.per, files: new Set() }); miss[k].n++; miss[k].v += it.vr; miss[k].files.add(it.file); }
+  for (const k of Object.keys(miss)) F(ctx, { rule: 'INT-01', ref: k, per: miss[k].per, base: miss[k].v, det: 'Rubrica ' + k.replace('|', ' / ') + ' usada em ' + miss[k].n + ' lançamento(s) sem S-1010 correspondente.', files: [...miss[k].files] });
+
+  /* Regras por rubrica (CP-01, CP-02, CP-05, CP-R1, FG-01, FG-R1, IR-01, IR-02, CS-04) */
+  for (const { it, r } of resolved) {
+    if (!r || !(it.vr > 0)) continue;
+    const nat = r.nat; const rt = ratesFor(ctx, it.per, it.estab, it.indS);
+    const nr = NATR[nat]; const nm = (r.dsc ? r.dsc + ' — ' : '') + nameOf(nat);
+    const common = { cpf: it.cpf, mat: it.mat, per: it.per, ref: it.cod + ' / nat ' + nat, base: it.vr, files: [it.file, r.file].filter(Boolean) };
+    if (nr && nr.cp && TRIB_CP.includes(r.cp) && !(nat === '1017')) {
+      if (r.cp !== '00') F(ctx, Object.assign({}, common, { rule: 'CP-01', conf: nr.cp[1], legalExtra: /^(STJ|STF|Lei|8\.036)/.test(nr.cp[0]) ? (nr.cp[0].startsWith('8.036') ? 'Lei ' + nr.cp[0] : nr.cp[0]) : 'Lei 8.212/91, art. ' + nr.cp[0], credito: it.vr * rt.tot / 100,
+        det: nm + ': codIncCP=' + r.cp + ' (base de cálculo). Alíquotas aplicadas: patronal ' + rt.pat + '% + RAT/FAP ' + r2(rt.rat) + '% + terceiros ' + rt.terc + '%' + (rt.nota ? ' (' + rt.nota + ')' : '') + '.' }));
+    }
+    if (nr && nr.cp5 && TRIB_CP.includes(r.cp)) F(ctx, Object.assign({}, common, { rule: 'CP-05', conf: nr.cp5[1], legalExtra: nr.cp5[0], credito: it.vr * rt.tot / 100, det: nm + ': codIncCP=' + r.cp + '. Valor potencial sujeito à verificação dos requisitos legais.' }));
+    if (nat === '1017' && it.src === 'S-2299' && TRIB_CP.includes(r.cp)) F(ctx, Object.assign({}, common, { rule: 'CP-01', conf: 'Média', legalExtra: 'Lei 8.212/91, art. 28, §9º, "d" (adicional de férias indenizadas)', credito: it.vr * rt.tot / 100, det: 'Terço constitucional lançado na rescisão (S-2299) com incidência: verificar se se refere a férias indenizadas (não incide) ou gozadas (incide — STF Tema 985).' }));
+    if ((nat === '4050' || nat === '4051') && ['21', '22'].includes(r.cp)) {
+      const tx = rt.pat + rt.rat + (ctx.P.maternidadeTerceiros ? rt.terc : 0);
+      F(ctx, Object.assign({}, common, { rule: 'CP-02', credito: it.vr * tx / 100, det: 'Salário-maternidade pago pela empresa (codIncCP=' + r.cp + '). Taxa patronal+RAT aplicada: ' + r2(tx) + '%. A base do segurado deve permanecer.' }));
+    }
+    if ((nat === '1016' || nat === '1017') && r.cp === '00' && !r.proc && it.src === 'S-1200') F(ctx, Object.assign({}, common, { rule: 'CP-R1', det: nm + ' com codIncCP=00 e sem processo cadastrado: exposição (risco) de ' + r2(it.vr * rt.tot / 100) + ' (estimado).', credito: it.vr * rt.tot / 100 }));
+    /* FGTS */
+    const aprendiz = it.categ === '103';
+    const tf = aprendiz ? ctx.P.aliqFGTSAprendiz : ctx.P.aliqFGTS;
+    if (nr && nr.fg && TRIB_FG.includes(r.fgts)) F(ctx, Object.assign({}, common, { rule: 'FG-01', conf: nr.fg[1], legalExtra: 'Lei 8.036/90, art. 15, §6º c/c Lei 8.212/91, art. ' + nr.fg[0], credito: it.vr * tf / 100, det: nm + ': codIncFGTS=' + r.fgts + '. Alíquota ' + tf + '%.' }));
+    if ((nat === '6003' || nat === '6001') && !['21', '93'].includes(r.fgts) && r.fgts !== '31') F(ctx, Object.assign({}, common, { rule: 'FG-R1', credito: it.vr * tf / 100, det: nm + ' com codIncFGTS=' + r.fgts + ' (esperado 21 ou 93): diferença estimada de FGTS ' + r2(it.vr * tf / 100) + '.' }));
+    /* IRRF */
+    if (nr && nr.ir && TRIB_IR.includes(r.irrf)) {
+      const ir5 = ctx.ir5002[it.cpf + '|' + normPer(it.per)];
+      let cred = it.vr * ctx.P.irrfMarginal / 100; if (ir5) cred = Math.min(cred, ir5.cr + ir5.cr13);
+      F(ctx, Object.assign({}, common, { rule: 'IR-01', conf: nr.ir[1], legalExtra: nr.ir[0], credito: cred, det: nm + ': codIncIRRF=' + r.irrf + ' (rendimento tributável). Estimativa = min(valor × ' + ctx.P.irrfMarginal + '%, IRRF retido no S-5002' + (ir5 ? '' : ' — S-5002 não carregado') + ').' }));
+    }
+    if (nat === '9213' && !IRRF_PENSAO.includes(r.irrf)) irDed(ctx, it, r, common, 'pensão alimentícia', 'Lei 9.250/95, art. 4º, II');
+    if (nat === '9201' && !IRRF_PSO.includes(r.irrf) && it.src) irDed(ctx, it, r, common, 'previdência oficial (PSO)', 'Lei 9.250/95, art. 4º, V');
+    if ((nat === '9223' || nat === '9224') && !IRRF_PC.includes(r.irrf)) irDed(ctx, it, r, common, 'previdência complementar/FAPI', 'Lei 9.250/95, art. 4º, V');
+    if (nat === '9253' && !(r.fgts === '31' && r.cp === '00' && r.irrf === '9')) F(ctx, Object.assign({}, common, { rule: 'CS-04', det: 'natRubr 9253 com codIncCP=' + r.cp + ', codIncIRRF=' + r.irrf + ', codIncFGTS=' + r.fgts + ' (esperado 00 / 9 / 31).' }));
+  }
+
+  ruleDiarias(ctx, resolved);
+  ruleAfastamento(ctx, resolved);
+  ruleSegurado(ctx);
+  ruleEnquadramento(ctx);
+  ruleRat(ctx);
+  ruleFgts(ctx, resolved);
+  ruleIrrf(ctx);
+  rulePT(ctx);
+  ruleConsig(ctx, resolved);
+  ctx.findings.sort((a, b) => (a.kind === 'credito' ? 0 : 1) - (b.kind === 'credito' ? 0 : 1) || b.credito - a.credito);
+  ctx.findings.forEach((f, i) => { f.id = i + 1; });
+  return ctx.findings;
+}
+
+function irDed(ctx, it, r, common, nome, lei) {
+  const ir5 = ctx.ir5002[it.cpf + '|' + normPer(it.per)];
+  let cred = it.vr * ctx.P.irrfMarginal / 100; if (ir5) cred = Math.min(cred, ir5.cr + ir5.cr13);
+  F(ctx, Object.assign({}, common, { rule: 'IR-02', legalExtra: lei, credito: cred, det: 'Desconto de ' + nome + ' (' + nameOf(r.nat) + ') com codIncIRRF=' + r.irrf + ': não deduzido da base do IRRF. Estimativa = min(valor × ' + ctx.P.irrfMarginal + '%, IRRF retido no S-5002).' }));
+}
+
+function ruleDiarias(ctx, resolved) {
+  const g = {};
+  for (const { it, r } of resolved) { if (!r || it.src !== 'S-1200' || it.ant) continue; const k = it.cpf + '|' + it.per + '|' + it.mat; const o = (g[k] = g[k] || { rem: 0, dia: 0, it, rs: [], files: new Set() });
+    if (r.nat === '1651') { if (TRIB_CP.includes(r.cp)) { o.dia += it.vr; o.direto = true; o.rs.push(r); o.files.add(it.file); } }
+    else if (r.nat === '1650') { if (TRIB_CP.includes(r.cp)) { o.dia += it.vr; o.rs.push(r); o.files.add(it.file); } }
+    else if (r.tp === '1' && r.cp === '11') o.rem += it.vr; }
+  for (const k of Object.keys(g)) { const o = g[k]; if (o.dia > 0 && (o.direto || (o.rem > 0 && o.dia <= 0.5 * o.rem))) { const rt = ratesFor(ctx, o.it.per, o.it.estab, o.it.indS);
+    F(ctx, { rule: 'CP-04', cpf: o.it.cpf, mat: o.it.mat, per: o.it.per, ref: 'natRubr 1650/1651', base: o.dia, credito: o.dia * rt.tot / 100, files: [...o.files], det: 'Diárias R$ ' + r2(o.dia) + (o.direto ? ' (natRubr 1651 — até 50%)' : ' ≤ 50% da remuneração mensal (R$ ' + r2(o.rem) + ')') + ' e tributadas. Comprovar as viagens.' }); } }
+}
+
+function ruleAfastamento(ctx, resolved) {
+  const af = ctx.afast.filter((a) => (a.mot === '01' || a.mot === '03') && a.ini);
+  if (!af.length) return;
+  const day = (s) => new Date(s + 'T00:00:00Z');
+  for (const a of af) {
+    const ini = day(a.ini); const fim15 = new Date(ini.getTime() + 14 * 86400000);
+    const fimReal = a.fim ? day(a.fim) : null; const fimEf = fimReal && fimReal < fim15 ? fimReal : fim15;
+    const perIni = a.ini.slice(0, 7); const perFim = fimEf.toISOString().slice(0, 7);
+    for (const per of new Set([perIni, perFim])) {
+      const its = resolved.filter(({ it, r }) => r && it.src === 'S-1200' && !it.ant && it.cpf === a.cpf && it.per === per && (!a.mat || it.mat === a.mat));
+      const direct = its.filter(({ it, r }) => r.nat === '1050' && TRIB_CP.includes(r.cp));
+      if (direct.length) { const v = sum(direct, (x) => x.it.vr); const rt = ratesFor(ctx, per, direct[0].it.estab, direct[0].it.indS);
+        F(ctx, { rule: 'CP-03', cpf: a.cpf, mat: a.mat, per, ref: 'natRubr 1050 (remuneração de dias de afastamento)', base: v, credito: v * rt.tot / 100, files: [...new Set(direct.map((x) => x.it.file))], conf: 'Média',
+          det: 'Afastamento ' + a.ini + ' (motivo ' + a.mot + ') — rubrica 1050 tributada em ' + per + '. Valor apurado diretamente da rubrica.' }); continue; }
+      const sal = its.filter(({ r }) => r.nat === '1000' && TRIB_CP.includes(r.cp));
+      if (sal.length) {
+        const [py, pm] = per.split('-').map(Number); const ms = Date.UTC(py, pm - 1, 1), me = Date.UTC(py, pm, 0);
+        const s = Math.max(ini.getTime(), ms), e = Math.min(fimEf.getTime(), me); const dias = e >= s ? Math.floor((e - s) / 86400000) + 1 : 0;
+        if (dias > 0) { const total = sum(sal, (x) => x.it.vr); const v = total / 30 * dias; const rt = ratesFor(ctx, per, sal[0].it.estab, sal[0].it.indS);
+          F(ctx, { rule: 'CP-03', cpf: a.cpf, mat: a.mat, per, ref: 'estimativa sobre natRubr 1000', base: v, credito: v * rt.tot / 100, conf: 'Baixa', files: [...new Set(sal.map((x) => x.it.file))],
+            det: 'Afastamento ' + a.ini + ' (motivo ' + a.mot + '): ' + dias + ' dia(s) dos 15 primeiros em ' + per + '. Estimativa = salário ' + r2(total) + ' / 30 × ' + dias + '. Conferir na folha.' }); }
+      }
+    }
+  }
+}
+
+function ruleSegurado(ctx) {
+  const P = ctx.P;
+  for (const k of Object.keys(ctx.b5001)) {
+    const o = ctx.b5001[k]; const year = yearOf(o.per);
+    const desc_ = sum(o.calc, (c) => c.vrDescSeg), calc = sum(o.calc, (c) => c.vrCpSeg);
+    const files = [o.file];
+    if (desc_ - calc > 0.01) { F(ctx, { rule: 'SEG-01', cpf: o.cpf, per: o.per, ref: 'S-5001 infoCpCalc', base: desc_, credito: desc_ - calc, files, det: 'Descontado do segurado R$ ' + r2(desc_) + ' > calculado pelo eSocial R$ ' + r2(calc) + '. Excedente devolvível ao trabalhador.' }); continue; }
+    const mx = maxContrib(P, year); if (mx == null) continue;
+    const has13 = o.bases.some((b) => b.ind13 === '1'); const cap = mx * (has13 ? 2 : 1);
+    const cand = [];
+    if (desc_ > cap + P.toleranciaTeto) cand.push({ ref: 'S-5001 vrDescSeg × teto ' + year, credito: desc_ - cap, conf: 'Alta', files, det: 'Descontado R$ ' + r2(desc_) + ' acima do máximo de R$ ' + r2(cap) + ' (teto ' + year + ': R$ ' + P.tabelaInss[year].teto + (has13 ? '; inclui 13º' : '') + ').' });
+    const ev = ctx.s1200.find((x) => x.cpf === o.cpf && x.per === o.per);
+    if (ev && ev.mv) {
+      const baseMes = sum(o.bases.filter((b) => b.tp === '11' && b.ind13 !== '1'), (b) => b.v);
+      const outras = sum(ev.mv.outr, (x) => x.vr);
+      if (ev.mv.ind === '3' && desc_ > 0.01) cand.push({ ref: 'S-1200 infoMV indMV=3', credito: desc_, conf: 'Alta', files: [o.file, ev.file], det: 'indMV=3 (teto já atingido em outra empresa; sem desconto devido), mas houve desconto de R$ ' + r2(desc_) + '.' });
+      else if (ev.mv.ind === '2' && !has13) {
+        const esp = Math.max(0, (contrib(P, year, baseMes + outras) || 0) - (contrib(P, year, outras) || 0));
+        if (desc_ - esp > P.toleranciaTeto) cand.push({ ref: 'S-1200 infoMV indMV=2', credito: desc_ - esp, conf: 'Média', files: [o.file, ev.file], det: 'indMV=2: esperado ≈ R$ ' + r2(esp) + ' (considerada a remuneração em outras empresas R$ ' + r2(outras) + '); descontado R$ ' + r2(desc_) + '.' });
+      }
+    }
+    if (cand.length) { cand.sort((a, b) => b.credito - a.credito); const c = cand[0]; F(ctx, Object.assign({ rule: 'SEG-02', cpf: o.cpf, per: o.per, base: desc_ }, c)); }
+  }
+}
+
+function ruleEnquadramento(ctx) {
+  const P = ctx.P;
+  const SEG = (cr) => /^1082|^1099|^1098/.test(cr);
+  for (const per of Object.keys(ctx.cs5011)) {
+    const o = ctx.cs5011[per]; const emp = empAt(ctx, per); const cls = emp ? emp.classTrib : o.classTrib;
+    const base = sum(o.estabs, (e) => e.base);
+    const nSeg = sum(o.cr.filter((c) => !SEG(c.cr)), (c) => c.v) + sum(o.estabs, (e) => sum(e.cr.filter((c) => !SEG(c.cr)), (c) => c.v));
+    if (cls === '01' && nSeg > 0.01) F(ctx, { rule: 'ENQ-01', per, ref: 'S-1000 classTrib=01 × S-5011', base: nSeg, credito: nSeg, conf: 'Média', det: 'classTrib=01 (Simples, CPP substituída), porém o S-5011 apresenta CR não-segurado de R$ ' + r2(nSeg) + '.' });
+    const inRange = (!P.regimeDe || per >= P.regimeDe) && (!P.regimeAte || per <= P.regimeAte);
+    if (P.regimeReal !== 'auto' && inRange && cls && cls !== P.regimeReal) {
+      const decl = ratesFor(ctx, per, o.estabs[0] ? o.estabs[0].nr : '', ''); let cred = 0, txt = '';
+      if (P.regimeReal === '01') { cred = base * decl.tot / 100; txt = 'patronal + RAT + terceiros'; }
+      else if (P.regimeReal === '02' || P.regimeReal === '03') { cred = base * decl.terc / 100; txt = 'contribuições a terceiros (LC 123/2006, art. 13, §3º)'; }
+      if (cred > 0) F(ctx, { rule: 'ENQ-01', per, ref: 'S-1000 classTrib=' + cls + ' × regime real ' + P.regimeReal, base, credito: cred, files: [], det: 'S-1000 informa classTrib=' + cls + '; regime real informado: ' + P.regimeReal + '. Crédito estimado sobre ' + txt + ' (base S-5011 R$ ' + r2(base) + ').' });
+    }
+    if (P.cprbReal && emp && emp.indDesFolha !== '1' && ['02', '03', '99'].includes(emp.classTrib) && base > 0) F(ctx, { rule: 'ENQ-02', per, ref: 'indDesFolha=0 × CPRB', base, credito: base * P.aliqPatronal / 100, det: 'Empresa declarada como enquadrada na CPRB, mas S-1000 informa indDesFolha=0: patronal de R$ ' + r2(base * P.aliqPatronal / 100) + ' (limite máximo, antes de compensar CPRB devida).' });
+  }
+}
+
+function ruleRat(ctx) {
+  const P = ctx.P; const porRaiz = {};
+  for (const nr of Object.keys(ctx.estabs)) for (const x of ctx.estabs[nr]) {
+    const f = num(x.fap);
+    if (x.fap && (f < 0.5 || f > 2.0) && !x.procFap) F(ctx, { rule: 'RAT-01', per: x.ini, ref: 'S-1005 ' + nr, base: 0, credito: 0, det: 'FAP ' + x.fap + ' no estabelecimento ' + nr + ' (vigência ' + x.ini + ').' });
+    if (x.aliqRat && !x.procRat) F(ctx, { rule: 'RAT-04', per: x.ini, ref: 'S-1005 ' + nr, det: 'aliqRat=' + x.aliqRat + ' informado sem procAdmJudRat (vigência ' + x.ini + ').' });
+    const leg = x.cnae && P.cnaeRat[x.cnae]; const efet = x.aliqRat ? num(x.aliqRat) : null;
+    if (leg && efet != null && efet !== leg) { const per = x.ini; const cs = Object.keys(ctx.cs5011).filter((p) => p >= x.ini && (!x.fim || p <= x.fim)); let cred = 0, base = 0;
+      for (const p of cs) for (const e of ctx.cs5011[p].estabs) if (e.nr === nr) { const dif = (efet - leg) * (x.fap ? num(x.fap) : 1) / 100; if (dif > 0) { cred += e.base * dif; base += e.base; } }
+      F(ctx, { rule: 'RAT-03', per, ref: 'CNAE ' + x.cnae + ' / estab ' + nr, base, credito: cred, det: 'RAT informado ' + efet + '% × RAT legal ' + leg + '% (CNAE ' + x.cnae + ', tabela carregada). Crédito calculado sobre a base do S-5011 no período.' }); }
+    const raiz = nr.slice(0, 8); (porRaiz[raiz] = porRaiz[raiz] || new Set()).add(String(x.aliqRat || P.cnaeRat[x.cnae] || ''));
+  }
+  for (const raiz of Object.keys(porRaiz)) if (porRaiz[raiz].size > 1) F(ctx, { rule: 'RAT-06', ref: 'CNPJ raiz ' + raiz, det: 'Alíquotas RAT distintas entre estabelecimentos: ' + [...porRaiz[raiz]].join(', ') + '.' });
+  for (const per of Object.keys(ctx.cs5011)) for (const e of ctx.cs5011[per].estabs) {
+    if (e.ajust && e.aliqRat && e.fap && Math.abs(e.ajust - e.aliqRat * e.fap) > 0.0006) F(ctx, { rule: 'RAT-02', per, ref: 'S-5011 estab ' + e.nr, base: e.base, det: 'aliqRatAjust ' + e.ajust + ' ≠ ' + e.aliqRat + ' × ' + e.fap + ' = ' + r2(e.aliqRat * e.fap * 10000) / 10000 + '.' });
+    if (e.ref && e.ajust > e.ref.ajust + 0.0006) F(ctx, { rule: 'RAT-05', per, ref: 'S-5011 estab ' + e.nr, base: e.base, credito: e.base * (e.ajust - e.ref.ajust) / 100, det: 'RAT ajustado efetivo ' + e.ajust + '% > referência legal ' + e.ref.ajust + '%.' });
+  }
+}
+
+function ruleFgts(ctx, resolved) {
+  for (const k of Object.keys(ctx.fg5003)) {
+    const o = ctx.fg5003[k];
+    for (const b of o.bases) { const ap = ['15', '16', '17', '18', '27', '28', '29', '30', '31', '32'].includes(b.tp) || b.cat === '103'; const al = ap ? ctx.P.aliqFGTSAprendiz : ctx.P.aliqFGTS;
+      if (b.dps > 0 && b.rem > 0 && b.dps - b.rem * al / 100 > 0.05) F(ctx, { rule: 'FG-02', cpf: o.cpf, mat: b.mat, per: o.per, ref: 'S-5003 tpValor ' + b.tp, base: b.rem, credito: b.dps - b.rem * al / 100, files: [o.file], det: 'Depósito R$ ' + r2(b.dps) + ' > ' + al + '% × base R$ ' + r2(b.rem) + '.' }); }
+  }
+  for (const d of ctx.s2299) {
+    const items6101 = d.items.filter((i) => { const r = rubAt(ctx, i.tab, i.cod, i.per); return r && r.nat === '6101'; });
+    const esp = MULTA[d.mtv];
+    if (items6101.length && esp === 0) F(ctx, { rule: 'FG-03', cpf: d.cpf, mat: d.mat, per: d.per, ref: 'natRubr 6101 / mtvDeslig ' + d.mtv, base: sum(items6101, (i) => i.vr), credito: 0, files: [d.file], det: 'Multa rescisória (6101) lançada com motivo de desligamento ' + d.mtv + ' (sem multa do FGTS).' });
+    if (esp > 0) F(ctx, { rule: 'FG-04', cpf: d.cpf, mat: d.mat, per: d.per, ref: 'mtvDeslig ' + d.mtv, files: [d.file], det: 'Motivo ' + d.mtv + ': multa esperada ' + esp + '% do saldo (conferir GRRF/extrato — valor não consta no XML).' });
+  }
+}
+
+function ruleIrrf(ctx) {
+  for (const k of Object.keys(ctx.ir5002)) {
+    const o = ctx.ir5002[k];
+    if ((o.cr + o.cr13) > 0.01 && (o.rendTrib + o.rendTrib13) <= 0.01) F(ctx, { rule: 'IR-04', cpf: o.cpf, per: o.per, ref: 'S-5002 totApurMen', credito: o.cr + o.cr13, base: 0, files: [o.file], det: 'IRRF retido R$ ' + r2(o.cr + o.cr13) + ' com rendimento tributável zerado.' });
+    const nDep = Object.values(o.deps).filter((v) => v === 'S').length;
+    if (nDep > 0) { const esp = nDep * ctx.P.deducaoDependente; if (o.ded < esp - 0.01) { let cred = (esp - o.ded) * ctx.P.irrfMarginal / 100; cred = Math.min(cred, o.cr + o.cr13 || cred);
+      F(ctx, { rule: 'IR-03', cpf: o.cpf, per: o.per, ref: 'S-5002 ideDep × dedDepen', base: esp - o.ded, credito: cred, files: [o.file], det: nDep + ' dependente(s) com depIRRF=S → dedução esperada R$ ' + r2(esp) + '; aplicada R$ ' + r2(o.ded) + '.' }); } }
+  }
+  for (const c of ctx.c2501) if (c.ir > 0.01 && c.rend <= 0.01) F(ctx, { rule: 'IR-05', cpf: c.cpf, per: c.per, ref: 'S-2501 proc. ' + c.nr, credito: c.ir, base: c.iso, det: 'IRRF R$ ' + r2(c.ir) + ' sem rendimento tributável no S-2501 (isento/não tributável R$ ' + r2(c.iso) + ').' });
+}
+
+function rulePT(ctx) {
+  for (const p of ctx.p2500) {
+    if (['2', '3', '4'].includes(p.rep) && (p.b + p.b13) > 0.01) F(ctx, { rule: 'PT-01', cpf: p.cpf, per: p.fim || p.ini, ref: 'S-2500 proc. ' + p.nr, base: p.b + p.b13, credito: 0, det: 'indReperc=' + p.rep + ' (sem repercussão previdenciária/FGTS), mas vrBcCpMensal/13º somam R$ ' + r2(p.b + p.b13) + '.' });
+    const c = ctx.c2501.filter((x) => x.nr === p.nr && x.cpf === p.cpf);
+    const cp = sum(c, (x) => x.cp), b = p.b + p.b13;
+    if (b > 0 && cp > 0) { const mx = (14 + ctx.P.aliqPatronal + ctx.P.ratPadrao * 2 + ctx.P.aliqTerceiros) / 100 * b; if (cp > mx + 0.05) F(ctx, { rule: 'PT-02', cpf: p.cpf, per: p.fim || p.ini, ref: 'proc. ' + p.nr, base: b, credito: cp - mx, det: 'Contribuições S-2501 R$ ' + r2(cp) + ' > limite teórico R$ ' + r2(mx) + ' sobre base R$ ' + r2(b) + '.' }); }
+  }
+}
+
+function ruleConsig(ctx, resolved) {
+  const g = {}, tot = {};
+  for (const { it, r } of resolved) {
+    const isC = (it.cons && it.cons.tp === '1') || (r && ['9253', '9254'].includes(r.nat)); if (!isC || !(it.vr > 0)) continue;
+    const k = it.cpf + '|' + it.per + '|' + (it.cons && it.cons.nr ? it.cons.inst + '/' + it.cons.nr : ''); if (it.cons && it.cons.nr) { (g[k] = g[k] || []).push(it); }
+    const kt = it.cpf + '|' + it.per; (tot[kt] = tot[kt] || { v: 0, it, f: new Set() }); tot[kt].v += it.vr; tot[kt].f.add(it.file);
+  }
+  for (const k of Object.keys(g)) if (g[k].length > 1) { const a = g[k]; const ev = sum(a.slice(1), (x) => x.vr); F(ctx, { rule: 'CS-01', cpf: a[0].cpf, mat: a[0].mat, per: a[0].per, ref: 'contrato ' + k.split('|')[2], base: sum(a, (x) => x.vr), credito: ev, files: [...new Set(a.map((x) => x.file))], det: a.length + ' lançamentos do mesmo contrato na competência; excedente R$ ' + r2(ev) + '.' }); }
+  for (const d of ctx.s2299) for (const k of Object.keys(tot)) { const [cpf, per] = k.split('|'); if (cpf === d.cpf && per > d.per) F(ctx, { rule: 'CS-02', cpf, mat: d.mat, per, ref: 'desligamento ' + d.dtDeslig, base: tot[k].v, credito: tot[k].v, files: [...tot[k].f, d.file], det: 'Consignado de R$ ' + r2(tot[k].v) + ' em ' + per + ', após desligamento em ' + d.dtDeslig + '.' }); }
+  for (const k of Object.keys(tot)) { const t = tot[k]; const b5 = ctx.b5001[t.it.cpf + '|' + t.it.per + '|' + (t.it.per.length === 4 ? '2' : '1')]; const rem = b5 ? sum(b5.bases.filter((x) => x.tp === '11'), (x) => x.v) : 0;
+    if (rem > 0 && t.v > rem * ctx.P.margemConsignado / 100) F(ctx, { rule: 'CS-03', cpf: t.it.cpf, per: t.it.per, ref: 'margem ' + ctx.P.margemConsignado + '%', base: rem, files: [...t.f], det: 'Consignados R$ ' + r2(t.v) + ' = ' + r2(t.v / rem * 100) + '% da base previdenciária R$ ' + r2(rem) + '.' }); }
+}
+
+/* ------------------------------------------------------------------ */
+/* API pública                                                          */
+/* ------------------------------------------------------------------ */
+function resumo(ctx) {
+  const por = { tributo: {}, regra: {}, comp: {} }; let total = 0, risco = 0, foraPrazo = 0;
+  for (const f of ctx.findings) {
+    if (f.kind === 'credito') { total += f.credito; if (f.prazo.status === 'Fora do prazo') foraPrazo += f.credito; }
+    if (f.kind === 'risco') risco += f.credito;
+    const t = (por.tributo[f.tributo] = por.tributo[f.tributo] || { n: 0, cred: 0, risco: 0 }); t.n++; if (f.kind === 'credito') t.cred += f.credito; if (f.kind === 'risco') t.risco += f.credito;
+    const r = (por.regra[f.rule] = por.regra[f.rule] || { n: 0, cred: 0 }); r.n++; if (f.kind === 'credito') r.cred += f.credito;
+    if (f.per) { const c = (por.comp[f.per] = por.comp[f.per] || { n: 0, cred: 0 }); c.n++; if (f.kind === 'credito') c.cred += f.credito; }
+  }
+  return { total: r2(total), risco: r2(risco), foraPrazo: r2(foraPrazo), por, n: ctx.findings.length };
+}
+
+return { createContext, ingestDoc, runRules, resumo, defaultParams, RULES, NAT, NATR, TABELA_INSS, TAGMAP, maxContrib, contrib, prazo, version: '1.0.0' };
+});
+</script>
+<script>/* Gerador de XMLs sintéticos (dados fictícios) para demonstração e teste */
+(function (root, factory) { if (typeof module === 'object' && module.exports) module.exports = factory(); else root.AuditSample = factory(); })(typeof self !== 'undefined' ? self : this, function () {
+const NS = 'http://www.esocial.gov.br/schema/evt/';
+const W = (name, ver, inner, id) => '<?xml version="1.0" encoding="UTF-8"?><eSocial xmlns="' + NS + name + '/' + ver + '"><' + name + ' Id="' + (id || 'ID1') + '">' + inner + '</' + name + '></eSocial>';
+const CNPJ = '12345678000190', CPF1 = '11111111111', CPF2 = '22222222222', CPF3 = '33333333333';
+function rubrica(cod, nat, tp, cp, irrf, fgts, dsc) {
+  return W('evtTabRubrica', 'S.01.03.00', '<infoRubrica><inclusao><ideRubrica><codRubr>' + cod + '</codRubr><ideTabRubr>TAB1</ideTabRubr><iniValid>2021-01</iniValid></ideRubrica><dadosRubrica><dscRubr>' + dsc + '</dscRubr><natRubr>' + nat + '</natRubr><tpRubr>' + tp + '</tpRubr><codIncCP>' + cp + '</codIncCP><codIncIRRF>' + irrf + '</codIncIRRF><codIncFGTS>' + fgts + '</codIncFGTS></dadosRubrica></inclusao></infoRubrica>', 'ID' + cod);
+}
+const it = (cod, vr) => '<itensRemun><codRubr>' + cod + '</codRubr><ideTabRubr>TAB1</ideTabRubr><vrRubr>' + vr.toFixed(2) + '</vrRubr></itensRemun>';
+function s1200(cpf, per, items, mv) {
+  return W('evtRemun', 'S.01.03.00', '<ideEvento><indRetif>1</indRetif><indApuracao>1</indApuracao><perApur>' + per + '</perApur></ideEvento><ideTrabalhador><cpfTrab>' + cpf + '</cpfTrab>' + (mv || '') + '</ideTrabalhador><dmDev><ideDmDev>1</ideDmDev><codCateg>101</codCateg><infoPerApur><ideEstabLot><tpInsc>1</tpInsc><nrInsc>' + CNPJ + '</nrInsc><codLotacao>L1</codLotacao><remunPerApur><matricula>M1</matricula>' + items.map((x) => it(x[0], x[1])).join('') + '</remunPerApur></ideEstabLot></infoPerApur></dmDev>', 'S1200' + cpf + per);
+}
+function generate() {
+  const f = {};
+  f['S-1000.xml'] = W('evtInfoEmpregador', 'S.01.03.00', '<ideEmpregador><tpInsc>1</tpInsc><nrInsc>' + CNPJ + '</nrInsc></ideEmpregador><infoEmpregador><inclusao><idePeriodo><iniValid>2021-01</iniValid></idePeriodo><infoCadastro><classTrib>99</classTrib><indDesFolha>0</indDesFolha></infoCadastro></inclusao></infoEmpregador>');
+  f['S-1005.xml'] = W('evtTabEstab', 'S.01.03.00', '<infoEstab><inclusao><ideEstab><tpInsc>1</tpInsc><nrInsc>' + CNPJ + '</nrInsc><iniValid>2021-01</iniValid></ideEstab><dadosEstab><cnaePrep>4711301</cnaePrep><aliqGilrat><aliqRat>3</aliqRat><fap>1.0000</fap></aliqGilrat></dadosEstab></inclusao></infoEstab>');
+  const R = [['101', '1000', '1', '11', '11', '11', 'Salário'], ['201', '1023', '1', '11', '11', '11', 'Abono pecuniário de férias'], ['202', '6006', '1', '00', '00', '00', 'Férias indenizadas'],
+    ['203', '1650', '1', '11', '00', '00', 'Diárias de viagem'], ['204', '4050', '1', '21', '11', '11', 'Salário-maternidade'], ['205', '6101', '1', '00', '11', '00', 'Multa rescisória 40%'],
+    ['301', '9201', '2', '31', '11', '00', 'INSS (desconto)'], ['302', '9253', '2', '00', '9', '31', 'Consignado'], ['206', '6003', '1', '00', '00', '00', 'Aviso prévio indenizado'], ['207', '6007', '1', '00', '11', '00', 'Férias indenizadas (IR tributado)']];
+  R.forEach((r) => { f['S-1010_' + r[0] + '.xml'] = rubrica(r[0], r[1], r[2], r[3], r[4], r[5], r[6]); });
+  f['S-1200_A_2022-03.xml'] = s1200(CPF1, '2022-03', [['101', 5000], ['201', 1666.67], ['203', 800], ['302', 400], ['302', 400]]);
+  f['S-1200_B_2023-05.xml'] = s1200(CPF2, '2023-05', [['101', 4000], ['204', 3000]]);
+  f['S-1200_C_2024-02.xml'] = s1200(CPF3, '2024-02', [['101', 9000], ['301', 1200]], '<infoMV><indMV>2</indMV><remunOutrEmpr><tpInsc>1</tpInsc><nrInsc>99999999000100</nrInsc><codCateg>101</codCateg><vlrRemunOE>3000.00</vlrRemunOE></remunOutrEmpr></infoMV>');
+  f['S-5001_C_2024-02.xml'] = W('evtBasesTrab', 'S.01.03.00', '<ideEvento><indApuracao>1</indApuracao><perApur>2024-02</perApur></ideEvento><ideTrabalhador><cpfTrab>' + CPF3 + '</cpfTrab><infoCpCalc><tpCR>108201</tpCR><vrCpSeg>200.00</vrCpSeg><vrDescSeg>1200.00</vrDescSeg></infoCpCalc><infoCp><ideEstabLot><infoCategIncid><matricula>M1</matricula><codCateg>101</codCateg><infoBaseCS><ind13>0</ind13><tpValor>11</tpValor><valor>9000.00</valor></infoBaseCS></infoCategIncid></ideEstabLot></infoCp></ideTrabalhador>');
+  f['S-5002_A_2022-03.xml'] = W('evtIrrfBenef', 'S.01.03.00', '<ideEvento><perApur>2022-03</perApur></ideEvento><ideTrabalhador><cpfBenef>' + CPF1 + '</cpfBenef><totApurMen><CRMen>056107</CRMen><vlrRendTrib>7000.00</vlrRendTrib><vlrCRMen>900.00</vlrCRMen></totApurMen></ideTrabalhador>');
+  f['S-2299_D.xml'] = W('evtDeslig', 'S.01.03.00', '<ideVinculo><cpfTrab>' + CPF2 + '</cpfTrab><matricula>M1</matricula></ideVinculo><infoDeslig><mtvDeslig>06</mtvDeslig><dtDeslig>2023-06-10</dtDeslig><verbasResc><dmDev><ideDmDev>R1</ideDmDev><infoPerApur><ideEstabLot><tpInsc>1</tpInsc><nrInsc>' + CNPJ + '</nrInsc><codLotacao>L1</codLotacao><detVerbas><codRubr>202</codRubr><ideTabRubr>TAB1</ideTabRubr><vrRubr>3000.00</vrRubr></detVerbas><detVerbas><codRubr>205</codRubr><ideTabRubr>TAB1</ideTabRubr><vrRubr>10000.00</vrRubr></detVerbas><detVerbas><codRubr>207</codRubr><ideTabRubr>TAB1</ideTabRubr><vrRubr>2000.00</vrRubr></detVerbas></ideEstabLot></infoPerApur></dmDev></verbasResc></infoDeslig>');
+  f['S-5003_B_2023-05.xml'] = W('evtBasesFGTS', 'S.01.03.00', '<ideEvento><indApuracao>1</indApuracao><perApur>2023-05</perApur></ideEvento><ideTrabalhador><cpfTrab>' + CPF2 + '</cpfTrab><infoFGTS><ideEstabLot><infoTrabFGTS><matricula>M1</matricula><codCateg>101</codCateg><basePerApur><tpValor>11</tpValor><remFGTS>4000.00</remFGTS><dpsFGTS>400.00</dpsFGTS></basePerApur></infoTrabFGTS></ideEstabLot></infoFGTS></ideTrabalhador>');
+  f['S-2230_A.xml'] = W('evtAfastTemp', 'S.01.03.00', '<ideVinculo><cpfTrab>' + CPF1 + '</cpfTrab><matricula>M1</matricula></ideVinculo><infoAfastamento><iniAfastamento><dtIniAfast>2022-03-10</dtIniAfast><codMotAfast>03</codMotAfast></iniAfastamento></infoAfastamento>');
+  return f;
+}
+return { generate };
+});
+</script>
+<script>(function () {
+'use strict';
+const E = window.AuditEngine, S = window.AuditSample;
+const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => [...(r || document).querySelectorAll(s)];
+const brl = (v) => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const st = { files: [], ctx: null, params: E.defaultParams(), filt: { q: '', tributo: '', kind: 'credito', conf: '', prazo: '' }, mask: true, sel: null };
+
+/* ---------- ZIP (deflate-raw via DecompressionStream) ---------- */
+async function readZip(buf) {
+  const dv = new DataView(buf), u8 = new Uint8Array(buf); const out = [];
+  let e = u8.length - 22; while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+  if (e < 0) throw new Error('ZIP inválido'); let n = dv.getUint16(e + 10, true), p = dv.getUint32(e + 16, true);
+  const dec = new TextDecoder();
+  for (let i = 0; i < n; i++) {
+    if (dv.getUint32(p, true) !== 0x02014b50) break;
+    const meth = dv.getUint16(p + 10, true), csz = dv.getUint32(p + 20, true), nl = dv.getUint16(p + 28, true), xl = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true), lo = dv.getUint32(p + 42, true);
+    const name = dec.decode(u8.subarray(p + 46, p + 46 + nl)); p += 46 + nl + xl + cl;
+    if (!/\.xml$/i.test(name) || /^__MACOSX/.test(name)) continue;
+    const lnl = dv.getUint16(lo + 26, true), lxl = dv.getUint16(lo + 28, true); const data = u8.subarray(lo + 30 + lnl + lxl, lo + 30 + lnl + lxl + csz);
+    let txt;
+    if (meth === 0) txt = dec.decode(data);
+    else if (meth === 8) { const ds = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw')); txt = dec.decode(await new Response(ds).arrayBuffer()); }
+    else continue;
+    out.push({ name, text: txt });
+  }
+  return out;
+}
+async function addFiles(list) {
+  for (const f of list) {
+    try {
+      if (/\.zip$/i.test(f.name)) { for (const x of await readZip(await f.arrayBuffer())) st.files.push({ name: f.name + ' › ' + x.name, text: x.text }); }
+      else if (/\.xml$/i.test(f.name)) st.files.push({ name: f.name, text: await f.text() });
+      else toast('Ignorado (não é XML/ZIP): ' + f.name);
+    } catch (e) { toast('Erro em ' + f.name + ': ' + e.message); }
+  }
+  renderFiles();
+}
+function toast(m) { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 5000); }
+
+/* ---------- Execução ---------- */
+function run() {
+  collectParams();
+  const ctx = E.createContext(st.params); const dp = new DOMParser();
+  for (const f of st.files) {
+    const doc = dp.parseFromString(f.text, 'application/xml');
+    if (doc.getElementsByTagName('parsererror').length) { ctx.parseErrors.push(f.name); continue; }
+    ctx.files++; ctx.bytes += f.text.length; E.ingestDoc(ctx, doc, f.name);
+  }
+  E.runRules(ctx); st.ctx = ctx; st.sel = null; renderAll(); showTab('achados');
+}
+function collectParams() {
+  const P = st.params; const g = (id) => $('#p_' + id);
+  const n = (id) => parseFloat(String(g(id).value).replace(',', '.')) || 0;
+  P.hoje = g('hoje').value || P.hoje; ['aliqPatronal', 'aliqTerceiros', 'ratPadrao', 'fapPadrao', 'aliqFGTS', 'aliqFGTSAprendiz', 'irrfMarginal', 'deducaoDependente', 'margemConsignado'].forEach((k) => (P[k] = n(k)));
+  P.regimeReal = g('regimeReal').value; P.regimeDe = g('regimeDe').value; P.regimeAte = g('regimeAte').value; P.cprbReal = g('cprbReal').checked; P.maternidadeTerceiros = g('matTerc').checked;
+  P.ativas = $$('#rulesList input:checked').map((i) => i.value);
+  const cn = {}; g('cnae').value.split(/\n/).forEach((l) => { const m = l.trim().match(/^(\d{7})\s*[;,\s]\s*([\d.,]+)/); if (m) cn[m[1]] = parseFloat(m[2].replace(',', '.')); }); P.cnaeRat = cn;
+  $$('#tabInss tbody tr').forEach((tr) => { const y = tr.dataset.y; const t = P.tabelaInss[y]; const v = $$('input', tr).map((i) => parseFloat(i.value.replace(',', '.'))); if (v.every(isFinite)) { t.faixas = [[v[0], 7.5], [v[1], 9], [v[2], 12], [v[3], 14]]; t.teto = v[3]; } });
+}
+
+/* ---------- Render ---------- */
+const maskCpf = (c) => (!c ? '' : st.mask ? c.slice(0, 3) + '.***.***-' + c.slice(-2) : c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'));
+function renderFiles() {
+  $('#fileCount').textContent = st.files.length ? st.files.length + ' arquivo(s) XML carregado(s)' : 'Nenhum arquivo carregado';
+  $('#fileList').innerHTML = st.files.slice(0, 200).map((f, i) => '<li><span>' + esc(f.name) + '</span><button data-rm="' + i + '" class="x" aria-label="Remover">×</button></li>').join('') + (st.files.length > 200 ? '<li>… e mais ' + (st.files.length - 200) + '</li>' : '');
+  $('#btnRun').disabled = !st.files.length;
+}
+function renderAll() { renderSummary(); renderList(); renderIntake(); }
+function renderIntake() {
+  const c = st.ctx; if (!c) return;
+  $('#intake').innerHTML = '<div class="kv"><b>' + c.files + '</b> arquivo(s) lido(s) · <b>' + c.events + '</b> evento(s) · <b>' + c.dups + '</b> retificação(ões) substituída(s)</div>' +
+    '<div class="chips">' + Object.keys(c.counts).sort().map((k) => '<span class="chip">' + k + ' · ' + c.counts[k] + '</span>').join('') + '</div>' +
+    (c.parseErrors.length ? '<p class="warn">XML malformado: ' + c.parseErrors.map(esc).join(', ') + '</p>' : '') + (c.warnings.length ? '<p class="warn">' + c.warnings.slice(0, 8).map(esc).join('<br>') + '</p>' : '') +
+    (c.counts['S-1200'] && !c.counts['S-1010'] ? '<p class="warn">Há S-1200 mas nenhum S-1010: sem o cadastro de rubricas não é possível auditar incidências.</p>' : '');
+}
+function renderSummary() {
+  const c = st.ctx; if (!c) return; const r = E.resumo(c);
+  const tr = Object.entries(r.por.tributo).sort((a, b) => b[1].cred - a[1].cred); const max = Math.max(1, ...tr.map((x) => x[1].cred));
+  $('#sumTop').innerHTML = '<div class="kpi"><span>Crédito potencial estimado</span><b>' + brl(r.total) + '</b></div><div class="kpi"><span>Fora do prazo quinquenal</span><b>' + brl(r.foraPrazo) + '</b></div><div class="kpi"><span>Riscos (contingência)</span><b>' + brl(r.risco) + '</b></div><div class="kpi"><span>Achados</span><b>' + r.n + '</b></div>';
+  $('#sumTrib').innerHTML = tr.map(([k, v]) => '<div class="bar"><span>' + esc(k) + '</span><i style="width:' + (v.cred / max * 100) + '%"></i><em>' + brl(v.cred) + '</em></div>').join('') || '<p class="muted">Sem créditos apurados.</p>';
+  const cm = Object.entries(r.por.comp).sort(); const mc = Math.max(1, ...cm.map((x) => x[1].cred));
+  $('#sumComp').innerHTML = cm.map(([k, v]) => '<div class="col" title="' + k + ': ' + brl(v.cred) + '"><i style="height:' + (v.cred / mc * 100) + '%"></i><span>' + k.slice(2) + '</span></div>').join('');
+}
+function filtered() {
+  const c = st.ctx; if (!c) return []; const f = st.filt; const q = f.q.toLowerCase();
+  return c.findings.filter((x) => (!f.tributo || x.tributo === f.tributo) && (!f.kind || x.kind === f.kind) && (!f.conf || x.conf === f.conf) && (!f.prazo || (f.prazo === 'ok' ? x.prazo.status !== 'Fora do prazo' : x.prazo.status === 'Fora do prazo')) &&
+    (!q || (x.rule + ' ' + x.titulo + ' ' + x.det + ' ' + x.cpf + ' ' + x.ref).toLowerCase().includes(q)));
+}
+function renderList() {
+  const c = st.ctx; const box = $('#fList'); if (!c) { box.innerHTML = '<p class="muted">Carregue os XML e execute a auditoria.</p>'; return; }
+  const tribs = [...new Set(c.findings.map((x) => x.tributo))]; const sel = $('#fTrib'); const cur = st.filt.tributo; sel.innerHTML = '<option value="">Todos os tributos</option>' + tribs.map((t) => '<option' + (t === cur ? ' selected' : '') + '>' + esc(t) + '</option>').join('');
+  const L = filtered(); $('#fCount').textContent = L.length + ' achado(s) · total ' + brl(L.filter((x) => x.kind === 'credito').reduce((a, x) => a + x.credito, 0));
+  box.innerHTML = L.slice(0, 500).map((x) => '<button class="row' + (st.sel === x.id ? ' on' : '') + '" data-id="' + x.id + '"><span class="tag t-' + x.kind + '">' + (x.kind === 'credito' ? 'Crédito' : x.kind === 'risco' ? 'Risco' : 'Conferir') + '</span><span class="rid">' + x.rule + '</span><span class="rt">' + esc(x.titulo) + '<small>' + esc(x.tributo) + ' · ' + esc(x.per) + (x.cpf ? ' · ' + maskCpf(x.cpf) : '') + ' · conf. ' + x.conf + '</small></span><span class="rv">' + (x.credito ? brl(x.credito) : '—') + '</span></button>').join('') || '<p class="muted">Nenhum achado com os filtros atuais.</p>';
+  if (L.length > 500) box.insertAdjacentHTML('beforeend', '<p class="muted">Mostrando 500 de ' + L.length + '. Refine os filtros ou exporte o CSV.</p>');
+}
+function renderDetail(id) {
+  const x = st.ctx.findings.find((f) => f.id === id); st.sel = id; $$('.row').forEach((r) => r.classList.toggle('on', +r.dataset.id === id)); if (!x) return;
+  const pz = x.prazo; $('#detail').hidden = false;
+  $('#detail').innerHTML = '<button class="x close" id="dClose" aria-label="Fechar">×</button><h3>' + x.rule + ' — ' + esc(x.titulo) + '</h3><div class="chips"><span class="chip">' + esc(x.tributo) + '</span><span class="chip">Confiança: ' + x.conf + '</span><span class="chip ' + (pz.status === 'Fora do prazo' ? 'bad' : pz.status.startsWith('Vence') ? 'amb' : '') + '">Prazo: ' + pz.status + (pz.limite ? ' (até ' + pz.limite.split('-').reverse().join('/') + ')' : '') + '</span></div>' +
+    '<dl><dt>Valor</dt><dd>' + (x.credito ? brl(x.credito) : '—') + (x.base ? ' sobre base de ' + brl(x.base) : '') + '</dd><dt>Competência</dt><dd>' + esc(x.per) + '</dd>' + (x.cpf ? '<dt>Trabalhador</dt><dd>' + maskCpf(x.cpf) + (x.mat ? ' · mat. ' + esc(x.mat) : '') + '</dd>' : '') + '<dt>Referência</dt><dd>' + esc(x.ref) + '</dd><dt>Constatação</dt><dd>' + esc(x.det) + '</dd></dl>' +
+    '<h4>Base legal</h4><ul class="legal">' + x.legal.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul><h4>Providência / via de recuperação</h4><p>' + esc(x.acao) + '</p>' + (x.files.length ? '<h4>Arquivos de origem</h4><p class="muted">' + [...new Set(x.files)].map(esc).join('<br>') + '</p>' : '');
+  $('#dClose').onclick = () => { $('#detail').hidden = true; st.sel = null; renderList(); };
+}
+function renderRules() {
+  const byT = {}; Object.entries(E.RULES).forEach(([k, r]) => (byT[r.tributo] = byT[r.tributo] || []).push([k, r]));
+  $('#rulesList').innerHTML = Object.keys(byT).map((t) => '<fieldset><legend>' + esc(t) + '</legend>' + byT[t].map(([k, r]) => '<details><summary><label><input type="checkbox" value="' + k + '" checked> <b>' + k + '</b> ' + esc(r.titulo) + '</label> <em class="muted">(' + (r.kind === 'risco' ? 'risco' : r.kind === 'conferencia' ? 'conferência' : 'crédito') + ' · ' + r.conf + ')</em></summary><ul class="legal">' + r.legal.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul><p>' + esc(r.acao) + '</p></details>').join('') + '</fieldset>').join('');
+}
+function renderParams() {
+  const P = st.params, set = (i, v) => ($('#p_' + i).value = v);
+  set('hoje', P.hoje); ['aliqPatronal', 'aliqTerceiros', 'ratPadrao', 'fapPadrao', 'aliqFGTS', 'aliqFGTSAprendiz', 'irrfMarginal', 'deducaoDependente', 'margemConsignado'].forEach((k) => set(k, P[k]));
+  $('#tabInss tbody').innerHTML = Object.keys(P.tabelaInss).map((y) => '<tr data-y="' + y + '"><th>' + y + '</th>' + P.tabelaInss[y].faixas.map((f) => '<td><input value="' + f[0] + '" inputmode="decimal"></td>').join('') + '</tr>').join('');
+}
+
+/* ---------- Exportação ---------- */
+function exportCsv() {
+  const L = filtered(); const h = ['ID', 'Regra', 'Tipo', 'Tributo', 'Titulo', 'Competencia', 'CPF', 'Matricula', 'Referencia', 'Base', 'Valor', 'Confianca', 'Prazo', 'Limite', 'Constatacao', 'Base legal', 'Providencia'];
+  const q = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const rows = L.map((x) => [x.id, x.rule, x.kind, x.tributo, x.titulo, x.per, st.mask ? maskCpf(x.cpf) : x.cpf, x.mat, x.ref, x.base, x.credito, x.conf, x.prazo.status, x.prazo.limite, x.det, x.legal.join(' | '), x.acao].map(q).join(';'));
+  const csv = h.join(';') + '\n' + rows.join('\n'); const ta = $('#csvOut'); ta.value = csv; ta.hidden = false; ta.select();
+  let ok = false; try { navigator.clipboard.writeText(csv).then(() => toast('CSV copiado (' + L.length + ' linhas). Cole no Excel ou em arquivo .csv (UTF-8).'), () => toast('Selecione o texto abaixo e copie (Ctrl+C).')); ok = true; } catch (e) {}
+  if (!ok) toast('Selecione o texto abaixo e copie (Ctrl+C).');
+}
+
+function showTab(n) { $$('.tab').forEach((t) => t.classList.toggle('on', t.dataset.tab === n)); $$('.pane').forEach((p) => (p.hidden = p.id !== 'pane-' + n)); }
+
+/* ---------- Eventos ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  renderParams(); renderRules(); renderFiles(); renderList();
+  $$('.tab').forEach((t) => (t.onclick = () => showTab(t.dataset.tab)));
+  const dz = $('#drop'), inp = $('#fileIn');
+  dz.onclick = () => inp.click(); inp.onchange = () => { addFiles([...inp.files]); inp.value = ''; };
+  ['dragover', 'dragenter'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((ev) => dz.addEventListener(ev, (e) => { e.preventDefault(); dz.classList.remove('over'); }));
+  dz.addEventListener('drop', (e) => addFiles([...e.dataTransfer.files]));
+  $('#fileList').onclick = (e) => { const b = e.target.closest('[data-rm]'); if (b) { st.files.splice(+b.dataset.rm, 1); renderFiles(); } };
+  $('#btnClear').onclick = () => { st.files = []; st.ctx = null; renderFiles(); renderList(); $('#sumTop').innerHTML = ''; $('#sumTrib').innerHTML = ''; $('#sumComp').innerHTML = ''; $('#intake').innerHTML = ''; };
+  $('#btnSample').onclick = () => { const f = S.generate(); st.files = Object.keys(f).map((n) => ({ name: n, text: f[n] })); renderFiles(); toast('Carregados ' + st.files.length + ' XML sintéticos (dados fictícios).'); };
+  $('#btnRun').onclick = run;
+  $('#fList').onclick = (e) => { const b = e.target.closest('.row'); if (b) renderDetail(+b.dataset.id); };
+  $('#fQ').oninput = (e) => { st.filt.q = e.target.value; renderList(); };
+  $('#fTrib').onchange = (e) => { st.filt.tributo = e.target.value; renderList(); };
+  $('#fKind').onchange = (e) => { st.filt.kind = e.target.value; renderList(); };
+  $('#fConf').onchange = (e) => { st.filt.conf = e.target.value; renderList(); };
+  $('#fPrazo').onchange = (e) => { st.filt.prazo = e.target.value; renderList(); };
+  $('#mask').onchange = (e) => { st.mask = e.target.checked; if (st.ctx) { renderList(); if (st.sel) renderDetail(st.sel); } };
+  $('#btnCsv').onclick = exportCsv;
+  $('#btnReset').onclick = () => { st.params = E.defaultParams(); renderParams(); $('#p_cnae').value = ''; $('#p_regimeReal').value = 'auto'; };
+});
+})();
+</script>
+</body></html>
