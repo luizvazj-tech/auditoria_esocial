@@ -84,7 +84,7 @@ fieldset{border:1px solid var(--bd);border-radius:8px;margin:0 0 10px}legend{fon
 <p><label><input type="checkbox" id="p_cprbReal"> Empresa enquadrada na CPRB (Lei 12.546/2011) — alerta ENQ-02</label><br><label><input type="checkbox" id="p_matTerc"> Aplicar terceiros também ao salário-maternidade (tese a confirmar)</label></p></div>
 <div class="card"><h2>Tabela do INSS do segurado (limites das faixas; 4ª faixa = teto)</h2><table id="tabInss"><thead><tr><th>Ano</th><th>7,5%</th><th>9%</th><th>12%</th><th>14% (teto)</th></tr></thead><tbody></tbody></table>
 <p class="muted">Valores pré-carregados: teto 2026 de R$ 8.475,55 (Portaria Interministerial MPS/MF nº 13/2026). Confira cada ano nas portarias oficiais antes de usar o resultado.</p></div>
-<div class="card"><h2>Grau de risco por CNAE (opcional)</h2><label class="f">Uma linha por CNAE: <code>7 dígitos; RAT%</code> (ex.: 4711301; 3). Tabela do Decreto 3.048/99, Anexo V [VERIFICAR FONTE OFICIAL]<textarea id="p_cnae" rows="4"></textarea></label></div>
+<div class="card"><h2>Grau de risco por CNAE (opcional)</h2><label class="f">Uma linha por CNAE: <code>7 dígitos; RAT%</code> (ex.: 4711301; 3). Tabela do Decreto 3.048/99, Anexo V<textarea id="p_cnae" rows="4"></textarea></label></div>
 <div class="actions"><button class="btn sec" id="btnReset">Restaurar padrões</button></div>
 </section>
 
@@ -203,19 +203,19 @@ const RULES = {
     legal: ['Lei 8.212/91, art. 28, §9º (alíneas e itens indicados em cada achado) c/c art. 22, I, II e III', 'Leiaute S-1.3, S-1010: campo codIncCP; Anexo I, Tabela 03 (natRubr)'],
     acao: 'Retificar a rubrica no S-1010 (alteração do codIncCP para 00, com o mesmo período de validade) e retificar os S-1200/S-2299 afetados; DCTFWeb retificadora; crédito via PER/DCOMP Web (pagamento indevido ou a maior).' },
   'CP-02': { tributo: 'INSS', conf: 'Alta', titulo: 'Salário-maternidade pago pela empresa com contribuição patronal (codIncCP 21/22)',
-    legal: ['STF, RE 576.967/PR (Tema 72 da repercussão geral) [VERIFICAR FONTE OFICIAL]', 'Parecer SEI nº 19.424/2020/ME (vinculação da RFB ao Tema 72) [VERIFICAR FONTE OFICIAL]', 'Lei 8.212/91, art. 28, §2º e §9º, "a" (a contribuição do segurado permanece devida)'],
+    legal: ['STF, RE 576.967/PR (Tema 72 da repercussão geral; DJe 21/10/2020)', 'Parecer SEI nº 19.424/2020/ME (vinculação da RFB ao Tema 72)', 'Lei 8.212/91, art. 28, §2º e §9º, "a" (a contribuição do segurado permanece devida)'],
     acao: 'A tese afasta a cota patronal (e, conforme o caso, RAT); a contribuição do segurado não é afetada. Conferir a forma de parametrização do S-1010 que preserve a base do segurado e excluir a base patronal; avaliar a via administrativa (PER/DCOMP) ou judicial. Terceiros: tese a confirmar.' },
   'CP-03': { tributo: 'INSS', conf: 'Média', titulo: 'Remuneração dos 15 primeiros dias de afastamento por doença/acidente com incidência previdenciária',
-    legal: ['Lei 8.213/91, art. 60, §3º (empresa paga o salário integral nos 15 primeiros dias)', 'STJ, REsp 1.230.957/RS (Tema 738) [VERIFICAR FONTE OFICIAL]', 'Leiaute S-2230 (codMotAfast 01 e 03 — Tabela 18)'],
+    legal: ['Lei 8.213/91, art. 60, §3º (empresa paga o salário integral nos 15 primeiros dias)', 'STJ, REsp 1.230.957/RS (Tema 738, recurso repetitivo: não incide a contribuição patronal sobre os 15 primeiros dias de afastamento por doença)', 'Leiaute S-2230 (codMotAfast 01 e 03 — Tabela 18)'],
     acao: 'Apurar a remuneração dos dias efetivamente cobertos pela empresa nos 15 primeiros dias; ajustar a incidência da rubrica e retificar S-1200. Valores estimados exigem conferência na folha.' },
   'CP-04': { tributo: 'INSS', conf: 'Alta', titulo: 'Diárias de viagem dentro de 50% da remuneração mensal com incidência previdenciária',
     legal: ['Lei 8.212/91, art. 28, §8º, "a", e §9º, "h"', 'Leiaute S-1.3, Tabela 03 (natRubr 1650)'],
     acao: 'Confirmar comprovação das viagens e a proporção; retificar a incidência (codIncCP 00) e os eventos S-1200 do período.' },
   'CP-05': { tributo: 'INSS', conf: 'Média', titulo: 'Tese a revisar: rubrica com natureza de baixa segurança jurídica tributada',
-    legal: ['Lei 8.212/91, art. 28, §9º (conforme alínea indicada)', 'Jurisprudência indicada em cada achado [VERIFICAR FONTE OFICIAL]'],
+    legal: ['Lei 8.212/91, art. 28, §9º (conforme alínea indicada)', 'Jurisprudência e demais fontes indicadas em cada achado (as que ainda não foram conferidas permanecem marcadas)'],
     acao: 'Verificar requisitos legais da exclusão (ex.: PLR conforme Lei 10.101/2000; assistência médica extensiva a todos os empregados) antes de retificar.' },
   'CP-R1': { tributo: 'INSS', kind: 'risco', conf: 'Média', titulo: 'Risco: terço de férias gozadas sem incidência previdenciária',
-    legal: ['STF, RE 1.072.485/PR (Tema 985) [VERIFICAR FONTE OFICIAL]', 'Lei 8.212/91, art. 22, I'],
+    legal: ['STF, RE 1.072.485/PR (Tema 985; DJe 02/10/2020; embargos julgados em 12/06/2024 com modulação: exigível a partir de 15/09/2020)', 'Lei 8.212/91, art. 22, I'],
     acao: 'Contingência: verificar se há decisão judicial favorável (S-1070/codIncCP 9X). Sem decisão, a não incidência expõe a empresa a lançamento.' },
   'SEG-01': { tributo: 'INSS', conf: 'Alta', titulo: 'Contribuição descontada do segurado superior à calculada pelo eSocial (S-5001)',
     legal: ['Leiaute S-5001: infoCpCalc (vrCpSeg × vrDescSeg)', 'Lei 8.212/91, art. 20 e art. 28, §5º'],
@@ -227,17 +227,17 @@ const RULES = {
     legal: ['Leiaute S-1000: classTrib (Tabela 08) e indDesFolha', 'LC 123/2006, art. 13, §3º (Simples: dispensa de contribuições a terceiros)', 'Lei 12.546/2011, arts. 7º a 9º (CPRB)'],
     acao: 'Corrigir S-1000 (alteração com novo período) e retificar S-1200/S-2299; para Simples substituído o crédito segue o PGDAS-D, não a DCTFWeb. CPRB: confrontar com EFD-Reinf R-2060.' },
   'ENQ-02': { tributo: 'INSS', conf: 'Baixa', kind: 'conferencia', titulo: 'Possível enquadramento na CPRB (desoneração) não adotado',
-    legal: ['Lei 12.546/2011, arts. 7º a 9º', 'Lei 14.973/2024 (transição) [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1000: indDesFolha'],
+    legal: ['Lei 12.546/2011, arts. 7º a 9º', 'Lei 14.973/2024 (transição da CPRB e da contribuição sobre a folha, 2025 a 2028)', 'Leiaute S-1000: indDesFolha'],
     acao: 'Valor é limite máximo (patronal paga); o crédito líquido depende da CPRB devida (receita bruta). Não apurável apenas pelos XML.' },
   'RAT-01': { tributo: 'RAT/FAP', kind: 'conferencia', conf: 'Alta', titulo: 'FAP fora do intervalo legal (0,5000 a 2,0000)',
-    legal: ['Lei 10.666/2003, art. 10', 'Decreto 3.048/99, art. 202-A [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1005: aliqGilrat/fap'],
+    legal: ['Lei 10.666/2003, art. 10', 'Decreto 3.048/99, art. 202-A', 'Leiaute S-1005: aliqGilrat/fap'],
     acao: 'Corrigir o FAP no S-1005 e retificar; conferir a Tabela FAP do ano.' },
   'RAT-02': { tributo: 'RAT/FAP', kind: 'conferencia', conf: 'Alta', titulo: 'Alíquota RAT ajustada diverge de RAT × FAP (S-5011)',
     legal: ['Leiaute S-5011: infoEstab/aliqRatAjust = aliqRat × fap'],
     acao: 'Conferir o retorno do S-5011 e o S-1005; reenviar tabelas e retificar se necessário.' },
   'RAT-03': { tributo: 'RAT/FAP', conf: 'Média', titulo: 'Alíquota RAT informada diverge do grau de risco do CNAE preponderante',
-    legal: ['Lei 8.212/91, art. 22, II (1%, 2% ou 3%)', 'Decreto 3.048/99, Anexo V (grau de risco por CNAE) [VERIFICAR FONTE OFICIAL]', 'STJ, Súmula 351 [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1005: cnaePrep, aliqRat'],
-    acao: 'Confirmar o CNAE preponderante (critério do Decreto 3.048/99, art. 202, §3º [VERIFICAR FONTE OFICIAL]) e corrigir o S-1005; o aliqRat só deve ser informado quando divergir da legislação, com processo (procAdmJudRat).' },
+    legal: ['Lei 8.212/91, art. 22, II (1%, 2% ou 3%)', 'Decreto 3.048/99, Anexo V (grau de risco por CNAE; redação do Decreto 10.410/2020)', 'STJ, Súmula 351 (1ª Seção, DJe 19/06/2008)', 'Leiaute S-1005: cnaePrep, aliqRat'],
+    acao: 'Confirmar o CNAE preponderante (critério do Decreto 3.048/99, art. 202, §3º (atividade preponderante é a que ocupa o maior número de segurados empregados e avulsos em cada estabelecimento)) e corrigir o S-1005; o aliqRat só deve ser informado quando divergir da legislação, com processo (procAdmJudRat).' },
   'RAT-04': { tributo: 'RAT/FAP', kind: 'conferencia', conf: 'Média', titulo: 'aliqRat informado no S-1005 sem processo administrativo/judicial associado',
     legal: ['Leiaute S-1005: aliqRat ("quando divergente da legislação" — exige procAdmJudRat)'],
     acao: 'Remover o aliqRat ou cadastrar o processo; retificar.' },
@@ -245,7 +245,7 @@ const RULES = {
     legal: ['Leiaute S-5011: infoEstab × infoEstabRef'],
     acao: 'Conferir a origem da divergência (processo/ajuste) e retificar.' },
   'RAT-06': { tributo: 'RAT/FAP', conf: 'Baixa', kind: 'conferencia', titulo: 'Estabelecimentos do mesmo CNPJ com RAT distinto',
-    legal: ['STJ, Súmula 351 [VERIFICAR FONTE OFICIAL]', 'Decreto 3.048/99, art. 202 [VERIFICAR FONTE OFICIAL]'],
+    legal: ['STJ, Súmula 351 (1ª Seção, DJe 19/06/2008)', 'Decreto 3.048/99, art. 202'],
     acao: 'Verificar o enquadramento por CNPJ/estabelecimento.' },
   'FG-01': { tributo: 'FGTS', conf: 'Alta', titulo: 'FGTS sobre parcela excluída do conceito de remuneração (S-1010 codIncFGTS)',
     legal: ['Lei 8.036/90, art. 15, §6º c/c Lei 8.212/91, art. 28, §9º (alínea indicada)', 'Leiaute S-1010: codIncFGTS (11, 12, 21)'],
@@ -260,10 +260,10 @@ const RULES = {
     legal: ['Lei 8.036/90, art. 18, §1º e §2º; CLT, art. 484-A', 'Leiaute S-2299: mtvDeslig'],
     acao: 'A multa NÃO consta nos XML do eSocial (depende do saldo da conta vinculada): conferir GRRF/extrato do FGTS.' },
   'FG-R1': { tributo: 'FGTS', kind: 'risco', conf: 'Alta', titulo: 'Risco: aviso prévio indenizado (e reflexo no 13º) sem FGTS',
-    legal: ['TST, Súmula 305 [VERIFICAR FONTE OFICIAL]', 'Lei 8.036/90, art. 15', 'MOS S-1.3, S-1010, item 9.1 (codIncFGTS 21 ou 93)'],
+    legal: ['TST, Súmula 305', 'Lei 8.036/90, art. 15', 'MOS S-1.3, S-1010, item 9.1 (codIncFGTS 21 ou 93)'],
     acao: 'Parametrizar codIncFGTS = 21 (ou 93, se houver decisão) e regularizar.' },
   'IR-01': { tributo: 'IRRF', conf: 'Alta', titulo: 'Verba indenizatória/isenta tributada no IRRF (S-1010 codIncIRRF)',
-    legal: ['Lei 7.713/88, art. 6º, V', 'STJ, Súmulas 125, 136, 215 e 386 (conforme o achado) [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1.3, Tabela 21 (códigos 72 a 79)'],
+    legal: ['Lei 7.713/88, art. 6º, V', 'STJ, Súmulas 125, 136 e 386 (conforme o achado); Súmula 215 (PDV) [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1.3, Tabela 21 (códigos 72 a 79)'],
     acao: 'Alterar o codIncIRRF da rubrica para o código de isenção (Tabela 21), retificar S-1200/S-2299 e S-1210; restituição/compensação via PER/DCOMP Web. Valor é teto estimado: o IRRF exato exige recálculo da base.' },
   'IR-02': { tributo: 'IRRF', conf: 'Alta', titulo: 'Dedução (previdência/pensão) não refletida na base do IRRF',
     legal: ['Lei 9.250/95, art. 4º, II (pensão alimentícia) e V (previdência)', 'Leiaute S-1010: codIncIRRF 41-43, 46-48, 51-54, 61-66 (Tabela 21)'],
@@ -311,12 +311,12 @@ const TRIB_CP = ['11', '12', '13', '14'];
 const TRIB_FG = ['11', '12', '21'];
 const TRIB_IR = ['11', '12', '13', '14'];
 const NATR = {
-  '6006': { cp: ['28, §9º, "d" (férias indenizadas e adicional)', 'Alta'], fg: ['28, §9º, "d"', 'Alta'], ir: ['STJ, Súmula 386 (férias proporcionais indenizadas) [VERIFICAR FONTE OFICIAL]', 'Alta'] },
-  '6007': { cp: ['28, §9º, "d" (férias indenizadas e adicional)', 'Alta'], fg: ['28, §9º, "d"', 'Alta'], ir: ['STJ, Súmula 125 (férias não gozadas) [VERIFICAR FONTE OFICIAL]', 'Alta'] },
+  '6006': { cp: ['28, §9º, "d" (férias indenizadas e adicional)', 'Alta'], fg: ['28, §9º, "d"', 'Alta'], ir: ['STJ, Súmula 386 (férias proporcionais indenizadas)', 'Alta'] },
+  '6007': { cp: ['28, §9º, "d" (férias indenizadas e adicional)', 'Alta'], fg: ['28, §9º, "d"', 'Alta'], ir: ['STJ, Súmula 125 (férias não gozadas por necessidade do serviço)', 'Alta'] },
   '6004': { cp: ['28, §9º, "d" (dobra do art. 137 da CLT)', 'Alta'], fg: ['28, §9º, "d"', 'Média'] },
   '1024': { cp: ['28, §9º, "d" (dobra do art. 137 da CLT)', 'Média'], fg: ['28, §9º, "d"', 'Média'] },
   '1023': { cp: ['28, §9º, "e", item 6 (abono de férias, arts. 143 e 144 da CLT)', 'Alta'], fg: ['28, §9º, "e", item 6', 'Alta'], ir: ['Tabela 21, código 75 (abono pecuniário) — fundamento a confirmar [VERIFICAR FONTE OFICIAL]', 'Média'] },
-  '1041': { cp: ['28, §9º, "e", item 8 (licença-prêmio indenizada)', 'Alta'], fg: ['28, §9º, "e", item 8', 'Alta'], ir: ['STJ, Súmula 136 [VERIFICAR FONTE OFICIAL]', 'Alta'] },
+  '1041': { cp: ['28, §9º, "e", item 8 (licença-prêmio indenizada)', 'Alta'], fg: ['28, §9º, "e", item 8', 'Alta'], ir: ['STJ, Súmula 136', 'Alta'] },
   '6101': { cp: ['8.036/90, art. 18, §1º (multa rescisória do FGTS não é remuneração) [VERIFICAR FONTE OFICIAL]', 'Média'], ir: ['Lei 7.713/88, art. 6º, V (indenização por rescisão do contrato de trabalho e FGTS)', 'Alta'] },
   '6102': { cp: ['28, §9º, "e", item 9 (Lei 7.238/84, art. 9º)', 'Alta'], fg: ['28, §9º, "e", item 9', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V', 'Média'] },
   '6103': { cp: ['28, §9º, "e", item 4 (Lei 5.889/73, art. 14)', 'Alta'], fg: ['28, §9º, "e", item 4', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V', 'Média'] },
@@ -324,15 +324,15 @@ const NATR = {
   '6105': { cp: ['28, §9º, "e", item 5 (incentivo à demissão)', 'Alta'], fg: ['28, §9º, "e", item 5', 'Alta'], ir: ['STJ, Súmula 215 [VERIFICAR FONTE OFICIAL]', 'Alta'] },
   '1403': { cp: ['28, §9º, "e", item 7 (ganhos eventuais e abonos desvinculados)', 'Alta'], fg: ['28, §9º, "e", item 7', 'Alta'] },
   '1402': { cp: ['28, §9º, "l" (abono PIS/PASEP)', 'Alta'], fg: ['28, §9º, "l"', 'Alta'] },
-  '1810': { cp: ['28, §9º, "f" (vale-transporte); STF, RE 478.410 [VERIFICAR FONTE OFICIAL]', 'Alta'], fg: ['28, §9º, "f"', 'Alta'] },
+  '1810': { cp: ['28, §9º, "f" (vale-transporte); STF, RE 478.410 (VT em pecúnia, DJe 14/05/2010)', 'Alta'], fg: ['28, §9º, "f"', 'Alta'] },
   '1806': { cp: ['28, §9º, "c" (PAT)', 'Alta'], fg: ['28, §9º, "c"', 'Alta'] },
   '1808': { cp: ['28, §9º, "c" (PAT)', 'Alta'], fg: ['28, §9º, "c"', 'Alta'] },
-  '1602': { cp: ['28, §9º, "g" (ajuda de custo única por mudança de local — CLT, art. 470) [VERIFICAR FONTE OFICIAL]', 'Média'], fg: ['28, §9º, "g"', 'Média'] },
-  '6003': { cp: ['STJ, REsp 1.230.957/RS (Tema 478) — aviso prévio indenizado [VERIFICAR FONTE OFICIAL]', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V (aviso prévio)', 'Alta'] },
+  '1602': { cp: ['28, §9º, "g" (ajuda de custo única por mudança de local — CLT, art. 470)', 'Média'], fg: ['28, §9º, "g"', 'Média'] },
+  '6003': { cp: ['STJ, REsp 1.230.957/RS (Tema 478) — aviso prévio indenizado', 'Alta'], ir: ['Lei 7.713/88, art. 6º, V (aviso prévio)', 'Alta'] },
   /* teses (CP-05) */
   '1300': { cp5: ['28, §9º, "j" (PLR — exige Lei 10.101/2000)', 'Média'], fg: ['28, §9º, "j"', 'Média'] },
   '1405': { cp5: ['28, §9º, "q" (assistência médica/odontológica)', 'Média'] },
-  '1811': { cp5: ['28, §9º, "f"; STF, RE 478.410 (VT em pecúnia) [VERIFICAR FONTE OFICIAL]', 'Baixa'] },
+  '1811': { cp5: ['28, §9º, "f"; STF, RE 478.410 (VT em pecúnia)', 'Baixa'] },
   '6107': { cp5: ['28, §9º, "e" (indenização por quebra de estabilidade — enquadramento a verificar) [VERIFICAR FONTE OFICIAL]', 'Baixa'] }
 };
 const IRRF_PENSAO = ['51', '52', '53', '54', '9051', '9052', '9053', '9054'];
@@ -1160,7 +1160,7 @@ const VIAS = {
       'Se não houve devolução, informar ao trabalhador a retificação para que a restituição ocorra no ajuste anual (DIRPF), com a retificação do informe de rendimentos.',
       'Após a retificação, emitir novo informe de rendimentos (DIRF/eSocial conforme o ano-calendário) e arquivar.'
     ],
-    base: ['Lei 7.713/88, art. 6º, V', 'Lei 9.250/95, art. 4º, II, III e V', 'STJ, Súmulas 125, 136, 215 e 386 [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1.3, Tabela 21 (codIncIRRF)'],
+    base: ['Lei 7.713/88, art. 6º, V', 'Lei 9.250/95, art. 4º, II, III e V', 'STJ, Súmulas 125, 136 e 386; Súmula 215 [VERIFICAR FONTE OFICIAL]', 'Leiaute S-1.3, Tabela 21 (codIncIRRF)'],
     cuidados: ['O valor do achado é um teto estimado (alíquota marginal limitada ao IRRF retido do S-5002), e não o recálculo da base: refazer a apuração com a tabela progressiva do ano.', PRAZO] },
   PROC: { nome: 'Processos trabalhistas (S-2500/S-2501)', rules: ['PT-01', 'PT-02', 'IR-05'],
     resumo: 'Retificação dos eventos do processo → recálculo em S-2501/DCTFWeb → PER/DCOMP.',
@@ -1170,7 +1170,7 @@ const VIAS = {
       'Se houve recolhimento a maior em DCTFWeb, seguir os passos de PER/DCOMP da via previdenciária.',
       'Quando o recolhimento decorreu de ordem judicial, avaliar manifestação no próprio processo antes da via administrativa.'
     ],
-    base: ['Leiaute S-1.3: S-2500 (indReperc, baseCalculo) e S-2501', 'Lei 8.212/91, art. 43 [VERIFICAR FONTE OFICIAL]'], cuidados: [PRAZO] },
+    base: ['Leiaute S-1.3: S-2500 (indReperc, baseCalculo) e S-2501', 'Lei 8.212/91, art. 43, §§1º e 5º (sem discriminação das parcelas, a contribuição incide sobre o valor total do acordo; acordo posterior à decisão de mérito: base no valor do acordo)'], cuidados: [PRAZO] },
   SIMPLES: { nome: 'Enquadramento (Simples Nacional / CPRB)', rules: ['ENQ-02'],
     resumo: 'Depende do regime: no Simples, a apuração segue o PGDAS-D; na CPRB, a EFD-Reinf.',
     passos: [
