@@ -145,9 +145,11 @@ fieldset{border:1px solid var(--bd);border-radius:8px;margin:0 0 10px}legend{fon
 /* Dicionários (extraídos do Anexo I do leiaute S-1.3, rev. 20/10/2026) */
 /* ------------------------------------------------------------------ */
 const NAT = {"1000": "Salário, vencimento, soldo", "1001": "Subsídio", "1002": "Descanso semanal remunerado - DSR", "1003": "Horas extraordinárias", "1004": "Horas extraordinárias - Banco de horas", "1005": "Direito de arena", "1006": "Intervalos intra e inter jornadas não concedidos", "1007": "Luvas e premiações", "1009": "Salário-família - Complemento", "1010": "Salário in natura - Pagos em bens ou serviços", "1011": "Sobreaviso e prontidão", "1012": "Descanso semanal remunerado - DSR e", "1015": "Adiantamento de férias", "1016": "Férias", "1017": "Terço constitucional de férias", "1018": "Férias - Abono ou gratificação de férias superior a 20 dias", "1019": "Terço constitucional de férias - Abono ou gratificação de férias superior a 20 dias", "1020": "Férias", "1021": "Férias - Abono ou gratificação de férias superior a 20 dias", "1022": "Férias - Abono ou gratificação de férias não excedente a 20 dias", "1023": "Férias - Abono pecuniário", "1024": "Férias - Dobro na vigência do contrato", "1040": "Licença-prêmio", "1041": "Licença-prêmio indenizada", "1050": "Remuneração de dias de afastamento", "1080": "Stock option", "1099": "Outras verbas salariais", "1201": "Adicional de função / cargo confiança", "1202": "Adicional de insalubridade", "1203": "Adicional de periculosidade", "1204": "Adicional de transferência", "1205": "Adicional noturno", "1206": "Adicional por tempo de serviço", "1207": "Comissões, porcentagens, produção", "1208": "Gueltas ou gorjetas - Repassadas por fornecedores ou clientes", "1209": "Gueltas ou gorjetas - Repassadas pelo empregador", "1210": "Gratificação por acordo ou convenção coletiva", "1211": "Gratificações", "1212": "Gratificações ou outras verbas de natureza permanente", "1213": "Gratificações ou outras verbas de natureza transitória", "1214": "Adicional de penosidade", "1215": "Adicional de unidocência", "1216": "Adicional de localidade", "1217": "Gratificação de curso/concurso", "1225": "Quebra de caixa", "1230": "Remuneração do dirigente sindical", "1299": "Outros adicionais", "1300": "PLR - Participação em Lucros ou Resultados", "1350": "Bolsa de estudo - Estagiário", "1351": "Bolsa de estudo - Médico residente", "1352": "Bolsa de estudo ou pesquisa", "1401": "Abono", "1402": "Abono PIS/PASEP", "1403": "Abono legal", "1404": "Auxílio babá", "1405": "Assistência médica", "1406": "Auxílio-creche", "1407": "Auxílio-educação", "1409": "Salário-família", "1410": "Auxílio - Locais de difícil acesso", "1411": "Auxílio-natalidade", "1412": "Abono permanência", "1601": "Ajuda de custo - Aeronauta", "1602": "Ajuda de custo de transferência", "1603": "Ajuda de custo", "1604": "Ajuda de custo - Acima de 50% da remuneração mensal", "1619": "Ajuda compensatória - Programa Emergencial de Manutenção do Emprego e da Renda", "1620": "Ressarcimento de despesas pelo uso de veículo próprio", "1621": "Ressarcimento de despesas de viagem, exceto despesas com veículos", "1623": "Ressarcimento de provisão", "1629": "Ressarcimento de outras despesas", "1650": "Diárias de viagem", "1651": "Diárias de viagem - Até 50% do salário", "1652": "Diárias de viagem - Acima de 50% do salário", "1799": "Alimentação concedida em pecúnia com caráter indenizatório", "1800": "Alimentação concedida em pecúnia", "1801": "Alimentação", "1802": "Etapas (marítimos)", "1805": "Moradia", "1806": "Alimentação em ticket ou cartão, vinculada ao PAT", "1807": "Alimentação em ticket ou cartão, não vinculada ao PAT", "1808": "Cesta básica ou refeição, vinculada ao PAT", "1809": "Cesta básica ou refeição, não vinculada ao PAT", "1810": "Transporte", "1811": "Auxílio-transporte ou auxílio-combustível com caráter salarial", "1899": "Outros auxílios", "1901": "Juros e/ou atualização monetária", "2501": "Prêmios", "2502": "Liberalidades concedidas em mais de duas parcelas anuais", "2510": "Direitos autorais e intelectuais", "2801": "Quarentena remunerada", "2901": "Empréstimos", "2902": "Vestuário e equipamentos", "2903": "Vestuário e equipamentos", "2920": "Reembolsos diversos", "2930": "Insuficiência de saldo", "2999": "Arredondamentos", "3501": "Remuneração por prestação de serviços", "3505": "Retiradas (pró-labore) de diretores empregados", "3506": "Retiradas (pró-labore) de diretores não empregados", "3508": "Retiradas (pró-labore) de proprietários ou sócios", "3509": "Honorários a conselheiros", "3510": "Gratificação (jeton)", "3511": "Gratificação eleitoral", "3520": "Remuneração de cooperado", "3525": "Côngruas, prebendas e afins", "4010": "Complementação salarial de auxílio-doença", "4011": "Complemento de salário- mínimo - RPPS", "4050": "Salário-maternidade", "4051": "Salário-maternidade - 13° salário", "4052": "Salário-paternidade", "4053": "Salário-paternidade - 13° salário", "5001": "13º salário", "5005": "13° salário complementar", "5501": "Adiantamento de salário", "5504": "13º salário - Adiantamento", "5510": "Adiantamento de benefícios previdenciários", "6000": "Saldo de salários na rescisão contratual", "6001": "13º salário relativo ao aviso prévio indenizado", "6002": "13° salário proporcional na rescisão", "6003": "Indenização compensatória do aviso prévio", "6004": "Férias - Dobro na rescisão", "6006": "Férias proporcionais", "6007": "Férias vencidas na rescisão", "6101": "Indenização compensatória - Multa rescisória 20 ou 40% (CF/88)", "6102": "Indenização do art. 9º da Lei 7.238/1984", "6103": "Indenização do art. 14 da Lei 5.889/1973", "6104": "Indenização do art. 479 da CLT", "6105": "Indenização recebida a título de incentivo a demissão", "6106": "Multa do art. 477 da CLT", "6107": "Indenização por quebra de estabilidade", "6108": "Tempo de espera do motorista profissional", "6119": "Indenização rescisória - Programa Emergencial de Manutenção do Emprego e da Renda", "6129": "Outras verbas não remuneratórias", "6901": "Desconto do aviso prévio", "6904": "Multa prevista no art. 480 da CLT", "7001": "Proventos", "7002": "Proventos - Pensão por morte Civil", "7003": "Proventos - Reserva", "7004": "Proventos - Reforma", "7005": "Pensão Militar", "7006": "Auxílio-reclusão", "7007": "Pensões especiais", "7008": "Complementação de aposentadoria/ pensão", "9200": "Desconto de adiantamentos", "9201": "Contribuição previdenciária", "9202": "Contribuição militar", "9203": "Imposto de Renda Retido na Fonte", "9205": "Provisão de contribuição previdenciária", "9207": "Faltas", "9208": "Atrasos", "9209": "Faltas ou atrasos", "9210": "DSR s/faltas e atrasos", "9211": "DSR sobre faltas", "9212": "DSR sobre atrasos", "9213": "Pensão alimentícia", "9214": "13° salário - Desconto de adiantamento", "9216": "Desconto de vale- transporte", "9217": "Contribuição a Outras Entidades e Fundos", "9218": "Retenções judiciais", "9219": "Desconto de assistência médica ou odontológica - Plano coletivo empresarial", "9220": "Alimentação - Desconto", "9221": "Desconto de férias", "9222": "Desconto de outros impostos e contribuições", "9223": "Previdência complementar - Parte do empregado", "9224": "FAPI - Parte do empregado", "9225": "Previdência complementar - Parte do servidor", "9226": "Desconto de férias - Abono", "9230": "Contribuição sindical laboral", "9231": "Mensalidade sindical ou associativa", "9232": "Contribuição sindical - Assistencial", "9233": "Contribuição sindical - Confederativa", "9240": "Alimentação concedida em pecúnia - Desconto", "9241": "Alimentação em ticket ou cartão, vinculada ao PAT - Desconto", "9242": "Alimentação em ticket ou cartão, não vinculada ao PAT - Desconto", "9243": "Cesta básica ou refeição, vinculada ao PAT - Desconto", "9244": "Cesta básica ou refeição, não vinculada ao PAT - Desconto", "9250": "Seguro de vida - Desconto", "9253": "Empréstimos eConsignado - Desconto", "9254": "Empréstimos consignados - Desconto", "9255": "Empréstimos do empregador - Desconto", "9258": "Convênios", "9260": "FIES - Desconto", "9270": "Danos e prejuízos causados pelo trabalhador", "9290": "Desconto de pagamento indevido em meses anteriores", "9291": "Abate-teto", "9292": "Ressarcimento ao erário", "9293": "Honorários advocatícios", "9294": "Redutor EC 41/03", "9299": "Outros descontos", "9901": "Base de cálculo da contribuição previdenciária", "9902": "Total da base de cálculo do FGTS", "9903": "Total da base de cálculo do IRRF", "9904": "Total da base de cálculo do FGTS rescisório", "9905": "Serviço militar", "9906": "Remuneração no exterior", "9907": "Total da contribuição da previdenciária patronal - RPPS", "9908": "FGTS - Depósito", "9910": "Seguros", "9911": "Assistência Médica", "9912": "Desconto de assistência médica ou odontológica - Plano diferente de coletivo empresarial", "9928": "Salário-paternidade pago pela Previdência Social", "9929": "Salário-paternidade pago pela Previdência Social - 13° salário", "9930": "Salário-maternidade pago pela Previdência Social", "9931": "Salário-maternidade pago pela Previdência Social - 13° salário", "9932": "Auxílio-doença acidentário", "9933": "Auxílio-doença", "9938": "Isenção IRRF - 65 anos", "9939": "Outros valores tributáveis", "9950": "Horas extraordinárias - Banco de horas", "9951": "Horas compensadas - Banco de horas", "9989": "Outros valores informativos"};
+const NATV = {"1000": [["2014-01", ""]], "1001": [["2014-01", ""]], "1002": [["2014-01", "2024-04"]], "1003": [["2014-01", ""]], "1004": [["2014-01", ""]], "1005": [["2014-01", ""]], "1006": [["2014-01", ""]], "1007": [["2014-01", ""]], "1009": [["2014-01", ""]], "1010": [["2014-01", ""]], "1011": [["2014-01", ""]], "1012": [["2014-01", ""]], "1015": [["2014-01", ""]], "1016": [["2014-01", "2025-12"], ["2026-01", ""]], "1017": [["2014-01", "2025-12"], ["2026-01", ""]], "1018": [["2014-01", ""]], "1019": [["2014-01", ""]], "1020": [["2014-01", "2023-04"]], "1021": [["2014-01", "2023-04"]], "1022": [["2014-01", ""]], "1023": [["2014-01", ""]], "1024": [["2014-01", ""]], "1040": [["2014-01", ""]], "1041": [["2014-01", ""]], "1050": [["2014-01", ""]], "1080": [["2014-01", ""]], "1099": [["2014-01", ""]], "1201": [["2014-01", ""]], "1202": [["2014-01", ""]], "1203": [["2014-01", ""]], "1204": [["2014-01", ""]], "1205": [["2014-01", ""]], "1206": [["2014-01", ""]], "1207": [["2014-01", ""]], "1208": [["2014-01", ""]], "1209": [["2014-01", ""]], "1210": [["2014-01", ""]], "1211": [["2014-01", ""]], "1212": [["2014-01", ""]], "1213": [["2014-01", ""]], "1214": [["2014-01", ""]], "1215": [["2014-01", ""]], "1216": [["2014-01", ""]], "1217": [["2014-01", ""]], "1225": [["2014-01", ""]], "1230": [["2014-01", ""]], "1299": [["2014-01", ""]], "1300": [["2014-01", ""]], "1350": [["2014-01", ""]], "1351": [["2014-01", ""]], "1352": [["2014-01", ""]], "1401": [["2014-01", ""]], "1402": [["2014-01", ""]], "1403": [["2014-01", ""]], "1404": [["2014-01", ""]], "1405": [["2014-01", ""]], "1406": [["2014-01", ""]], "1407": [["2014-01", ""]], "1409": [["2014-01", ""]], "1410": [["2014-01", ""]], "1411": [["2014-01", ""]], "1412": [["2014-01", ""]], "1601": [["2014-01", ""]], "1602": [["2014-01", ""]], "1603": [["2018-05", ""]], "1604": [["2018-05", "2019-03"]], "1619": [["2020-04", ""]], "1620": [["2014-01", ""]], "1621": [["2014-01", ""]], "1623": [["2014-01", ""]], "1629": [["2014-01", ""]], "1650": [["2018-05", ""]], "1651": [["2014-01", "2018-04"]], "1652": [["2014-01", "2018-04"]], "1799": [["2014-01", ""]], "1800": [["2014-01", "2025-12"], ["2026-01", ""]], "1801": [["2014-01", "2021-06"]], "1802": [["2014-01", ""]], "1805": [["2014-01", ""]], "1806": [["2014-01", ""]], "1807": [["2014-01", ""]], "1808": [["2014-01", ""]], "1809": [["2014-01", ""]], "1810": [["2014-01", "2025-12"], ["2026-01", ""]], "1811": [["2014-01", ""]], "1899": [["2014-01", ""]], "1901": [["2014-01", ""]], "2501": [["2014-01", ""]], "2502": [["2018-05", "2019-03"]], "2510": [["2014-01", ""]], "2801": [["2014-01", ""]], "2901": [["2014-01", ""]], "2902": [["2014-01", "2021-07"]], "2903": [["2014-01", ""]], "2920": [["2014-01", "2021-07"]], "2930": [["2014-01", ""]], "2999": [["2014-01", ""]], "3501": [["2014-01", ""]], "3505": [["2014-01", ""]], "3506": [["2014-01", ""]], "3508": [["2014-01", ""]], "3509": [["2014-01", ""]], "3510": [["2014-01", ""]], "3511": [["2014-01", ""]], "3520": [["2014-01", ""]], "3525": [["2018-05", ""]], "4010": [["2014-01", ""]], "4011": [["2014-01", ""]], "4050": [["2014-01", ""]], "4051": [["2014-01", ""]], "4052": [["2026-12", ""]], "4053": [["2026-12", ""]], "5001": [["2014-01", ""]], "5005": [["2014-01", ""]], "5501": [["2014-01", ""]], "5504": [["2014-01", ""]], "5510": [["2014-01", ""]], "6000": [["2014-01", ""]], "6001": [["2014-01", ""]], "6002": [["2014-01", ""]], "6003": [["2014-01", ""]], "6004": [["2014-01", ""]], "6006": [["2014-01", ""]], "6007": [["2014-01", ""]], "6101": [["2014-01", ""]], "6102": [["2014-01", ""]], "6103": [["2014-01", ""]], "6104": [["2014-01", ""]], "6105": [["2014-01", ""]], "6106": [["2014-01", ""]], "6107": [["2014-01", ""]], "6108": [["2014-01", ""]], "6119": [["2020-04", ""]], "6129": [["2014-01", ""]], "6901": [["2014-01", ""]], "6904": [["2014-01", ""]], "7001": [["2014-01", ""]], "7002": [["2014-01", ""]], "7003": [["2014-01", ""]], "7004": [["2014-01", ""]], "7005": [["2014-01", ""]], "7006": [["2014-01", ""]], "7007": [["2014-01", ""]], "7008": [["2014-01", ""]], "9200": [["2014-01", ""]], "9201": [["2014-01", ""]], "9202": [["2014-01", ""]], "9203": [["2014-01", ""]], "9205": [["2014-01", ""]], "9207": [["2014-01", ""]], "9208": [["2014-01", ""]], "9209": [["2014-01", ""]], "9210": [["2014-01", ""]], "9211": [["2014-01", ""]], "9212": [["2014-01", ""]], "9213": [["2014-01", ""]], "9214": [["2014-01", ""]], "9216": [["2014-01", ""]], "9217": [["2014-01", ""]], "9218": [["2014-01", ""]], "9219": [["2014-01", ""]], "9220": [["2014-01", "2021-06"]], "9221": [["2014-01", ""]], "9222": [["2014-01", ""]], "9223": [["2014-01", ""]], "9224": [["2014-01", ""]], "9225": [["2014-01", ""]], "9226": [["2014-01", ""]], "9230": [["2014-01", ""]], "9231": [["2014-01", ""]], "9232": [["2014-01", ""]], "9233": [["2014-01", ""]], "9240": [["2014-01", ""]], "9241": [["2014-01", ""]], "9242": [["2014-01", ""]], "9243": [["2014-01", ""]], "9244": [["2014-01", ""]], "9250": [["2014-01", ""]], "9253": [["2024-07", ""]], "9254": [["2014-01", ""]], "9255": [["2014-01", ""]], "9258": [["2014-01", ""]], "9260": [["2018-05", ""]], "9270": [["2014-01", ""]], "9290": [["2014-01", "2021-07"]], "9291": [["2014-01", ""]], "9292": [["2014-01", ""]], "9293": [["2014-01", ""]], "9294": [["2014-01", ""]], "9299": [["2014-01", ""]], "9901": [["2014-01", ""]], "9902": [["2014-01", ""]], "9903": [["2014-01", ""]], "9904": [["2014-01", ""]], "9905": [["2014-01", ""]], "9906": [["2014-01", ""]], "9907": [["2014-01", ""]], "9908": [["2014-01", ""]], "9910": [["2014-01", ""]], "9911": [["2014-01", ""]], "9912": [["2014-01", ""]], "9928": [["2026-12", ""]], "9929": [["2026-12", ""]], "9930": [["2014-01", ""]], "9931": [["2014-01", ""]], "9932": [["2014-01", ""]], "9933": [["2014-01", ""]], "9938": [["2014-01", ""]], "9939": [["2014-01", ""]], "9950": [["2014-01", "2019-10"]], "9951": [["2014-01", "2019-10"]], "9989": [["2014-01", ""]]}; /* vigência por natRubr (Tabela 03): [início, término] AAAA-MM */
+const FPAS_TERC = {"507|0079": 5.8, "507|4163": 5.8, "515|0115": 5.8, "515|4163": 5.8, "523|0003": 2.7, "531|0003": 5.2, "531|0131": 5.2, "558|0099": 4.5, "558|4163": 5.5, "604|0003": 2.7, "612|3139": 5.8, "612|4163": 5.8, "612|3072": 2.5, "647|0099": 4.5, "680|0131": 5.2, "736|0003": 2.7, "787|4099": 5.2, "795|4099": 7.7, "795|0003": 5.2, "795|0079": 5.8, "795|4163": 5.8}; /* 'FPAS|código de terceiros' → alíquota total (%), Tabela 04; apenas grupos cuja soma de códigos e de alíquotas fecha */
 
 const TAGMAP = {
-  evtInfoEmpregador: 'S-1000', evtTabEstab: 'S-1005', evtTabRubrica: 'S-1010',
+  evtInfoEmpregador: 'S-1000', evtTabEstab: 'S-1005', evtTabLotacao: 'S-1020', evtTabRubrica: 'S-1010',
   evtRemun: 'S-1200', evtPgtos: 'S-1210', evtAfastTemp: 'S-2230', evtDeslig: 'S-2299',
   evtAdmissao: 'S-2200', evtAltCadastral: 'S-2205', evtAltContratual: 'S-2206',
   evtTSVInicio: 'S-2300', evtTSVTermino: 'S-2399', evtProcTrab: 'S-2500', evtContProc: 'S-2501',
@@ -293,6 +295,12 @@ const RULES = {
   'CS-04': { tributo: 'CONSIGNADO', conf: 'Alta', kind: 'conferencia', titulo: 'Rubrica eConsignado (natRubr 9253) com incidências fora do padrão',
     legal: ['MOS S-1.3, S-1010, item 20.1: codIncFGTS [31], codIncCP [00], codIncIRRF [9]'],
     acao: 'Corrigir S-1010 (alteração).' },
+  'TB-01': { tributo: 'GERAL', kind: 'conferencia', conf: 'Média', titulo: 'Natureza de rubrica inexistente ou fora de vigência na Tabela 03',
+    legal: ['Leiaute S-1.3, Anexo I, Tabela 03 (natureza e vigência da rubrica)'],
+    acao: 'Corrigir o S-1010 para uma natureza vigente na competência e retificar os eventos que a utilizam; a natureza errada compromete a incidência apurada.' },
+  'ENQ-03': { tributo: 'INSS', kind: 'conferencia', conf: 'Baixa', titulo: 'Combinação FPAS × código de terceiros não localizada na Tabela 04 extraída',
+    legal: ['Leiaute S-1.3, Anexo I, Tabela 04 (FPAS/Terceiros)', 'Lei 8.212/1991, art. 22-A e art. 3º, § 1º'],
+    acao: 'Confirmar na Tabela 04 oficial o código de terceiros correspondente ao FPAS da lotação (S-1020); se divergente, retificar o S-1020 e apurar o indébito de terceiros. A extração da tabela pode estar incompleta.' },
   'INT-01': { tributo: 'GERAL', kind: 'conferencia', conf: 'Alta', titulo: 'Rubrica utilizada sem cadastro no S-1010 enviado',
     legal: ['Leiaute S-1200/S-2299: codRubr + ideTabRubr devem constar do S-1010'],
     acao: 'Anexar o S-1010 correspondente para auditar a incidência dessa rubrica.' }
@@ -354,7 +362,7 @@ function inccp(c) { return c === '00' ? 'não é base' : c; }
 /* ------------------------------------------------------------------ */
 function createContext(params) {
   const P = Object.assign(defaultParams(), params || {});
-  return { P, files: 0, bytes: 0, events: 0, counts: {}, warnings: [], conform: {}, parseErrors: [], emp: [], estabs: {}, rub: {}, rubExcl: {},
+  return { P, files: 0, bytes: 0, events: 0, counts: {}, warnings: [], conform: {}, lots: {}, parseErrors: [], emp: [], estabs: {}, rub: {}, rubExcl: {},
     byKey: {}, fileInfo: {}, s1200: [], s2299: [], afast: [], b5001: {}, ir5002: {}, fg5003: {}, cs5011: {}, p2500: [], c2501: [], desligs: [], findings: [], dups: 0 };
 }
 
@@ -412,6 +420,7 @@ function dispatch(ctx, type, e, meta) {
     case 'S-1000': return inS1000(ctx, e);
     case 'S-1005': return inS1005(ctx, e);
     case 'S-1010': return inS1010(ctx, e, meta);
+    case 'S-1020': return inS1020(ctx, e, meta);
     case 'S-1200': return inS1200(ctx, e, meta);
     case 'S-2299': return inS2299(ctx, e, meta);
     case 'S-2230': return inS2230(ctx, e);
@@ -477,6 +486,21 @@ function inS1010(ctx, e, meta) {
     (ctx.rub[key] = ctx.rub[key] || []).push(rec);
   }
 }
+function inS1020(ctx, e, meta) {
+  const info = kid(e, 'infoLotacao'); if (!info) return;
+  for (const op of ['inclusao', 'alteracao']) {
+    const o = kid(info, op); if (!o) continue; const ide = kid(o, 'ideLotacao'); if (!ide) continue;
+    const nv = kid(o, 'novaValidade'); const dl = kid(o, 'dadosLotacao'); const fp = dl ? kid(dl, 'fpasLotacao') : null; if (!fp) continue;
+    const cod = val(ide, 'codLotacao');
+    (ctx.lots[cod] = ctx.lots[cod] || []).push({ ini: normPer(nv ? val(nv, 'iniValid') : val(ide, 'iniValid')), fpas: val(fp, 'fpas'), terc: val(fp, 'codTercs'), file: meta.file });
+  }
+}
+function lotAt(ctx, cod, per) {
+  const arr = ctx.lots[cod]; if (!arr) return null; const p = normPer(per); let r = null;
+  for (const x of arr) if (x.ini <= p && (!r || x.ini >= r.ini)) r = x;
+  return r;
+}
+function tercRate(fpas, terc) { if (terc === '0000') return 0; const v = FPAS_TERC[fpas + '|' + terc]; return v === undefined ? null : v; }
 function rubAt(ctx, tab, cod, per) {
   const arr = ctx.rub[tab + '|' + cod]; if (!arr) return null; const p = normPer(per); let r = null;
   for (const x of arr) if (x.ini <= p && (!x.fim || p <= x.fim)) r = x;
@@ -506,10 +530,10 @@ function inS1200(ctx, e, meta) {
     const base0 = { src: 'S-1200', cpf, per, file: meta.file, ideDm: val(dm, 'ideDmDev'), categ: val(dm, 'codCateg') };
     const ipa = kid(dm, 'infoPerApur');
     if (ipa) for (const lot of kids(ipa, 'ideEstabLot')) for (const rm of kids(lot, 'remunPerApur'))
-      for (const it of kids(rm, 'itensRemun')) evt.items.push(mkItem(Object.assign({}, base0, { mat: val(rm, 'matricula'), estab: val(lot, 'nrInsc'), indS: val(rm, 'indSimples'), perRef: per, ant: false }), it));
+      for (const it of kids(rm, 'itensRemun')) evt.items.push(mkItem(Object.assign({}, base0, { mat: val(rm, 'matricula'), estab: val(lot, 'nrInsc'), lot: val(lot, 'codLotacao'), indS: val(rm, 'indSimples'), perRef: per, ant: false }), it));
     const ipt = kid(dm, 'infoPerAnt');
     if (ipt) for (const adc of kids(ipt, 'ideADC')) for (const pr of kids(adc, 'idePeriodo')) for (const lot of kids(pr, 'ideEstabLot')) for (const rm of kids(lot, 'remunPerAnt'))
-      for (const it of kids(rm, 'itensRemun')) evt.items.push(mkItem(Object.assign({}, base0, { mat: val(rm, 'matricula'), estab: val(lot, 'nrInsc'), indS: val(rm, 'indSimples'), perRef: val(pr, 'perRef'), ant: true }), it));
+      for (const it of kids(rm, 'itensRemun')) evt.items.push(mkItem(Object.assign({}, base0, { mat: val(rm, 'matricula'), estab: val(lot, 'nrInsc'), lot: val(lot, 'codLotacao'), indS: val(rm, 'indSimples'), perRef: val(pr, 'perRef'), ant: true }), it));
   }
   storeLast(ctx, 'S-1200|' + cpf + '|' + per + '|' + ind, evt, ctx.s1200);
 }
@@ -522,10 +546,10 @@ function inS2299(ctx, e, meta) {
   if (vr) for (const dm of kids(vr, 'dmDev')) {
     const base0 = { src: 'S-2299', cpf, mat, per, perRef: per, file: meta.file, ideDm: val(dm, 'ideDmDev'), categ: '', ant: false };
     const ipa = kid(dm, 'infoPerApur');
-    if (ipa) for (const lot of kids(ipa, 'ideEstabLot')) for (const it of kids(lot, 'detVerbas')) evt.items.push(mkItem(Object.assign({}, base0, { estab: val(lot, 'nrInsc') }), it));
+    if (ipa) for (const lot of kids(ipa, 'ideEstabLot')) for (const it of kids(lot, 'detVerbas')) evt.items.push(mkItem(Object.assign({}, base0, { estab: val(lot, 'nrInsc'), lot: val(lot, 'codLotacao') }), it));
     const ipt = kid(dm, 'infoPerAnt');
     if (ipt) for (const adc of kids(ipt, 'ideADC')) for (const pr of kids(adc, 'idePeriodo')) for (const lot of kids(pr, 'ideEstabLot')) for (const it of kids(lot, 'detVerbas'))
-      evt.items.push(mkItem(Object.assign({}, base0, { estab: val(lot, 'nrInsc'), perRef: val(pr, 'perRef'), ant: true }), it));
+      evt.items.push(mkItem(Object.assign({}, base0, { estab: val(lot, 'nrInsc'), lot: val(lot, 'codLotacao'), perRef: val(pr, 'perRef'), ant: true }), it));
   }
   storeLast(ctx, 'S-2299|' + cpf + '|' + mat, evt, ctx.s2299);
 }
@@ -620,13 +644,15 @@ function contrib(P, year, base) {
   for (const [lim, al] of t.faixas) { if (b > prev) tot += (Math.min(b, lim) - prev) * al / 100; prev = lim; } return r2(tot);
 }
 
-function ratesFor(ctx, per, estabNr, indS) {
+function ratesFor(ctx, per, estabNr, indS, lot) {
   const P = ctx.P; const emp = empAt(ctx, per); const cls = emp ? emp.classTrib : '99';
   const es = estabAt(ctx, estabNr, per);
   let rat = P.ratPadrao * P.fapPadrao;
   if (es && es.aliqRat) rat = num(es.aliqRat) * (es.fap ? num(es.fap) : 1);
   else if (es && es.cnae && P.cnaeRat[es.cnae]) rat = P.cnaeRat[es.cnae] * (es.fap ? num(es.fap) : 1);
   let pat = P.aliqPatronal, terc = P.aliqTerceiros, nota = '';
+  const lt = lot ? lotAt(ctx, lot, per) : null; const tr = lt ? tercRate(lt.fpas, lt.terc) : null;
+  if (tr !== null) { terc = tr; nota = 'Terceiros ' + tr + '% conforme S-1020 (FPAS ' + lt.fpas + ', código ' + lt.terc + ') e Tabela 04'; }
   const subst = () => { pat = 0; rat = 0; terc = 0; };
   if (cls === '01') { subst(); nota = 'Simples (CPP substituída): sem patronal no eSocial'; }
   else if (cls === '02') terc = 0;
@@ -648,6 +674,14 @@ function prazo(ctx, per) {
   return { status: dias < 0 ? 'Fora do prazo' : (dias < 180 ? 'Vence em <6 meses' : 'No prazo'), limite: lim.toISOString().slice(0, 10), dias, venc: venc.toISOString().slice(0, 10) };
 }
 
+/* Grau de verificação por regra:
+   A = consistência interna do eSocial (compara campos/eventos do próprio leiaute; não depende de interpretação jurídica);
+   B = incidência conforme norma textual e domínios do leiaute conferidos, com cálculo testado; depende da natureza/classificação informada;
+   C = tese jurídica ou estimativa; exige validação por especialista antes de qualquer pedido. */
+const GRAU = { A: 'A — consistência interna do eSocial', B: 'B — norma textual e leiaute conferidos, cálculo testado', C: 'C — tese ou estimativa: validar com especialista' };
+const VERIF = { 'SEG-01': 'A', 'RAT-02': 'A', 'RAT-05': 'A', 'FG-02': 'A', 'IR-04': 'A', 'CS-01': 'A', 'CS-02': 'A', 'CS-04': 'A', 'INT-01': 'A', 'TB-01': 'A', 'FG-03': 'A', 'FG-04': 'A', 'RAT-04': 'A',
+  'CP-01': 'B', 'CP-04': 'B', 'FG-01': 'B', 'IR-01': 'B', 'IR-02': 'B', 'SEG-02': 'B', 'CP-02': 'B', 'RAT-01': 'B', 'ENQ-03': 'B',
+  'CP-03': 'C', 'CP-05': 'C', 'CP-R1': 'C', 'ENQ-01': 'C', 'ENQ-02': 'C', 'RAT-03': 'C', 'RAT-06': 'C', 'FG-R1': 'C', 'IR-03': 'C', 'IR-05': 'C', 'PT-01': 'C', 'PT-02': 'C', 'CS-03': 'C' };
 function F(ctx, o) {
   const r = RULES[o.rule]; if (!r) throw new Error('regra desconhecida ' + o.rule);
   if (ctx.P.ativas && ctx.P.ativas.indexOf(o.rule) < 0) return;
@@ -674,10 +708,27 @@ function runRules(ctx) {
   for (const { it, r } of resolved) if (!r) { const k = it.tab + '|' + it.cod; (miss[k] = miss[k] || { n: 0, v: 0, per: it.per, files: new Set() }); miss[k].n++; miss[k].v += it.vr; miss[k].files.add(it.file); }
   for (const k of Object.keys(miss)) F(ctx, { rule: 'INT-01', ref: k, per: miss[k].per, base: miss[k].v, det: 'Rubrica ' + k.replace('|', ' / ') + ' usada em ' + miss[k].n + ' lançamento(s) sem S-1010 correspondente.', files: [...miss[k].files] });
 
+  /* TB-01: natureza inexistente ou fora de vigência (Tabela 03); um achado por rubrica */
+  const tb = {};
+  for (const { it, r } of resolved) {
+    if (!r || !r.nat) continue; const k = it.tab + '|' + it.cod + '|' + r.nat; if (tb[k]) continue;
+    const vg = NATV[r.nat]; const p = normPer(it.per);
+    let why = '';
+    if (!NAT[r.nat]) why = 'natRubr ' + r.nat + ' não consta da Tabela 03';
+    else if (vg && vg.length && !vg.some(([a, f]) => (!a || a <= p) && (!f || p <= f))) why = 'natRubr ' + r.nat + ' (' + nameOf(r.nat) + ') fora de vigência em ' + p + ' (vigências: ' + vg.map(([a, f]) => (a || '…') + ' a ' + (f || 'atual')).join('; ') + ')';
+    if (why) { tb[k] = 1; F(ctx, { rule: 'TB-01', per: it.per, ref: it.cod + ' / nat ' + r.nat, base: it.vr, det: 'Rubrica ' + it.cod + ': ' + why + '. Verificada em ' + (r.file || 'S-1010') + '.', files: [it.file, r.file].filter(Boolean) }); }
+  }
+  /* ENQ-03: FPAS × terceiros (S-1020) */
+  const fpTab = new Set(Object.keys(FPAS_TERC).map((k) => k.split('|')[0]));
+  for (const cod of Object.keys(ctx.lots)) for (const l of ctx.lots[cod]) {
+    if (!fpTab.has(l.fpas) || l.terc === '0000' || tercRate(l.fpas, l.terc) !== null) continue;
+    F(ctx, { rule: 'ENQ-03', per: l.ini, ref: 'lotação ' + cod + ' / FPAS ' + l.fpas + ' / terceiros ' + l.terc, det: 'S-1020 informa FPAS ' + l.fpas + ' com código de terceiros ' + l.terc + ', combinação ausente entre os grupos conferidos da Tabela 04 (soma dos códigos e das alíquotas fecha em ' + Object.keys(FPAS_TERC).filter((k) => k.startsWith(l.fpas + '|')).map((k) => k.split('|')[1] + '=' + FPAS_TERC[k] + '%').join(', ') + ').', files: [l.file] });
+  }
+
   /* Regras por rubrica (CP-01, CP-02, CP-05, CP-R1, FG-01, FG-R1, IR-01, IR-02, CS-04) */
   for (const { it, r } of resolved) {
     if (!r || !(it.vr > 0)) continue;
-    const nat = r.nat; const rt = ratesFor(ctx, it.per, it.estab, it.indS);
+    const nat = r.nat; const rt = ratesFor(ctx, it.per, it.estab, it.indS, it.lot);
     const nr = NATR[nat]; const nm = (r.dsc ? r.dsc + ' — ' : '') + nameOf(nat);
     const common = { cpf: it.cpf, mat: it.mat, per: it.per, ref: it.cod + ' / nat ' + nat, base: it.vr, files: [it.file, r.file].filter(Boolean) };
     if (nr && nr.cp && TRIB_CP.includes(r.cp) && !(nat === '1017')) {
@@ -734,7 +785,7 @@ function ruleDiarias(ctx, resolved) {
     if (r.nat === '1651') { if (TRIB_CP.includes(r.cp)) { o.dia += it.vr; o.direto = true; o.rs.push(r); o.files.add(it.file); } }
     else if (r.nat === '1650') { if (TRIB_CP.includes(r.cp)) { o.dia += it.vr; o.rs.push(r); o.files.add(it.file); } }
     else if (r.tp === '1' && r.cp === '11') o.rem += it.vr; }
-  for (const k of Object.keys(g)) { const o = g[k]; if (o.dia > 0 && (o.direto || (o.rem > 0 && o.dia <= 0.5 * o.rem))) { const rt = ratesFor(ctx, o.it.per, o.it.estab, o.it.indS);
+  for (const k of Object.keys(g)) { const o = g[k]; if (o.dia > 0 && (o.direto || (o.rem > 0 && o.dia <= 0.5 * o.rem))) { const rt = ratesFor(ctx, o.it.per, o.it.estab, o.it.indS, o.it.lot);
     F(ctx, { rule: 'CP-04', cpf: o.it.cpf, mat: o.it.mat, per: o.it.per, ref: 'natRubr 1650/1651', base: o.dia, credito: o.dia * rt.tot / 100, files: [...o.files], det: 'Diárias R$ ' + r2(o.dia) + (o.direto ? ' (natRubr 1651 — até 50%)' : ' ≤ 50% da remuneração mensal (R$ ' + r2(o.rem) + ')') + ' e tributadas. Comprovar as viagens.' }); } }
 }
 
@@ -749,14 +800,14 @@ function ruleAfastamento(ctx, resolved) {
     for (const per of new Set([perIni, perFim])) {
       const its = resolved.filter(({ it, r }) => r && it.src === 'S-1200' && !it.ant && it.cpf === a.cpf && it.per === per && (!a.mat || it.mat === a.mat));
       const direct = its.filter(({ it, r }) => r.nat === '1050' && TRIB_CP.includes(r.cp));
-      if (direct.length) { const v = sum(direct, (x) => x.it.vr); const rt = ratesFor(ctx, per, direct[0].it.estab, direct[0].it.indS);
+      if (direct.length) { const v = sum(direct, (x) => x.it.vr); const rt = ratesFor(ctx, per, direct[0].it.estab, direct[0].it.indS, direct[0].it.lot);
         F(ctx, { rule: 'CP-03', cpf: a.cpf, mat: a.mat, per, ref: 'natRubr 1050 (remuneração de dias de afastamento)', base: v, credito: v * rt.tot / 100, files: [...new Set(direct.map((x) => x.it.file))], conf: 'Média',
           det: 'Afastamento ' + a.ini + ' (motivo ' + a.mot + ') — rubrica 1050 tributada em ' + per + '. Valor apurado diretamente da rubrica.' }); continue; }
       const sal = its.filter(({ r }) => r.nat === '1000' && TRIB_CP.includes(r.cp));
       if (sal.length) {
         const [py, pm] = per.split('-').map(Number); const ms = Date.UTC(py, pm - 1, 1), me = Date.UTC(py, pm, 0);
         const s = Math.max(ini.getTime(), ms), e = Math.min(fimEf.getTime(), me); const dias = e >= s ? Math.floor((e - s) / 86400000) + 1 : 0;
-        if (dias > 0) { const total = sum(sal, (x) => x.it.vr); const v = total / 30 * dias; const rt = ratesFor(ctx, per, sal[0].it.estab, sal[0].it.indS);
+        if (dias > 0) { const total = sum(sal, (x) => x.it.vr); const v = total / 30 * dias; const rt = ratesFor(ctx, per, sal[0].it.estab, sal[0].it.indS, sal[0].it.lot);
           F(ctx, { rule: 'CP-03', cpf: a.cpf, mat: a.mat, per, ref: 'estimativa sobre natRubr 1000', base: v, credito: v * rt.tot / 100, conf: 'Baixa', files: [...new Set(sal.map((x) => x.it.file))],
             det: 'Afastamento ' + a.ini + ' (motivo ' + a.mot + '): ' + dias + ' dia(s) dos 15 primeiros em ' + per + '. Estimativa = salário ' + r2(total) + ' / 30 × ' + dias + '. Conferir na folha.' }); }
       }
@@ -894,7 +945,7 @@ function dehydrate(f) { return { rule: f.rule, kind: f.kind, conf: f.conf, credi
 function hydrate(s, hoje) { const r = RULES[s.rule] || { tributo: 'GERAL', titulo: s.rule, acao: '', legal: [] };
   const f = Object.assign({ tributo: r.tributo, titulo: r.titulo, acao: r.acao }, s); f.prazo = prazo({ P: { hoje } }, s.per); return f; }
 
-return { fkey, dehydrate, hydrate, createContext, ingestDoc, runRules, resumo, defaultParams, RULES, NAT, NATR, TABELA_INSS, TAGMAP, CONFORM, cpfOk, cnpjOk, maxContrib, contrib, prazo, version: '1.0.0' };
+return { fkey, dehydrate, hydrate, createContext, ingestDoc, runRules, resumo, defaultParams, RULES, NAT, NATR, TABELA_INSS, TAGMAP, GRAU, VERIF, tercRate, CONFORM, cpfOk, cnpjOk, maxContrib, contrib, prazo, version: '1.0.0' };
 });
 </script>
 <script>/* Validação preventiva dos eventos do eSocial, derivada das tabelas de campos do leiaute S-1.3 (obrigatoriedade, ocorrência,
@@ -1336,7 +1387,7 @@ function renderDetail(id) {
   const x = st.ctx.findings.find((f) => f.id === id); st.sel = id; $$('.row').forEach((r) => r.classList.toggle('on', +r.dataset.id === id)); if (!x) return;
   const pz = x.prazo; $('#detail').hidden = false;
   $('#detail').innerHTML = '<button class="x close" id="dClose" aria-label="Fechar">×</button><h3>' + x.rule + ' — ' + esc(x.titulo) + '</h3><div class="chips"><span class="chip">' + esc(x.tributo) + '</span><span class="chip">Confiança: ' + x.conf + '</span><span class="chip ' + (pz.status === 'Fora do prazo' ? 'bad' : pz.status.startsWith('Vence') ? 'amb' : '') + '">Prazo: ' + pz.status + (pz.limite ? ' (até ' + pz.limite.split('-').reverse().join('/') + ')' : '') + '</span></div>' +
-    '<dl><dt>Valor</dt><dd>' + (x.credito ? brl(x.credito) : '—') + (x.base ? ' sobre base de ' + brl(x.base) : '') + '</dd><dt>Competência</dt><dd>' + esc(x.per) + '</dd>' + (x.cpf ? '<dt>Trabalhador</dt><dd>' + maskCpf(x.cpf) + (x.mat ? ' · mat. ' + esc(x.mat) : '') + '</dd>' : '') + '<dt>Referência</dt><dd>' + esc(x.ref) + '</dd><dt>Constatação</dt><dd>' + esc(x.det) + '</dd></dl>' +
+    '<dl><dt>Grau de verificação</dt><dd>' + esc(E.GRAU[E.VERIF[x.rule]] || '—') + '</dd><dt>Valor</dt><dd>' + (x.credito ? brl(x.credito) : '—') + (x.base ? ' sobre base de ' + brl(x.base) : '') + '</dd><dt>Competência</dt><dd>' + esc(x.per) + '</dd>' + (x.cpf ? '<dt>Trabalhador</dt><dd>' + maskCpf(x.cpf) + (x.mat ? ' · mat. ' + esc(x.mat) : '') + '</dd>' : '') + '<dt>Referência</dt><dd>' + esc(x.ref) + '</dd><dt>Constatação</dt><dd>' + esc(x.det) + '</dd></dl>' +
     '<h4>Base legal</h4><ul class="legal">' + x.legal.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul><h4>Providência</h4><p>' + esc(x.acao) + '</p>' + roteiro(x) + (x.kind === 'credito' ? statusForm(x) : '') + (x.files.length ? '<h4>Arquivos de origem</h4><p class="muted">' + [...new Set(x.files)].map(esc).join('<br>') + '</p>' : '');
   $('#dClose').onclick = () => { $('#detail').hidden = true; st.sel = null; renderList(); };
   const sv = $('#sSave'); if (sv) sv.onclick = () => saveStatus(x, { status: $('#sSt').value, protocolo: $('#sProt').value, recuperado: parseFloat(String($('#sVal').value).replace(',', '.')) || 0, nota: $('#sNota').value }).then(() => toast('Andamento gravado.'));
@@ -1419,7 +1470,7 @@ async function importBackup(file) {
 /* ---------- Regras e parâmetros ---------- */
 function renderRules() {
   const byT = {}; Object.entries(E.RULES).forEach(([k, r]) => (byT[r.tributo] = byT[r.tributo] || []).push([k, r]));
-  $('#rulesList').innerHTML = Object.keys(byT).map((t) => '<fieldset><legend>' + esc(t) + '</legend>' + byT[t].map(([k, r]) => '<details><summary><label><input type="checkbox" value="' + k + '" checked> <b>' + k + '</b> ' + esc(r.titulo) + '</label> <em class="muted">(' + (r.kind === 'risco' ? 'risco' : r.kind === 'conferencia' ? 'conferência' : 'crédito') + ' · ' + r.conf + ')</em></summary><ul class="legal">' + r.legal.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul><p>' + esc(r.acao) + '</p></details>').join('') + '</fieldset>').join('');
+  $('#rulesList').innerHTML = Object.keys(byT).map((t) => '<fieldset><legend>' + esc(t) + '</legend>' + byT[t].map(([k, r]) => '<details><summary><label><input type="checkbox" value="' + k + '" checked> <b>' + k + '</b> ' + esc(r.titulo) + '</label> <em class="muted">(' + (r.kind === 'risco' ? 'risco' : r.kind === 'conferencia' ? 'conferência' : 'crédito') + ' · ' + r.conf + ' · grau ' + (E.VERIF[k] || '?') + ')</em></summary><p class="muted">' + esc(E.GRAU[E.VERIF[k]] || '') + '</p><ul class="legal">' + r.legal.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul><p>' + esc(r.acao) + '</p></details>').join('') + '</fieldset>').join('');
 }
 function renderParams() {
   const P = st.params, set = (i, v) => ($('#p_' + i).value = v);
