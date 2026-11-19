@@ -162,6 +162,7 @@ const TAGMAP = {
 const TABELA_INSS = {
   2021: { teto: 6433.57, faixas: [[1100.00, 7.5], [2203.48, 9], [3305.22, 12], [6433.57, 14]] },
   2022: { teto: 7087.22, faixas: [[1212.00, 7.5], [2427.35, 9], [3641.03, 12], [7087.22, 14]] },
+  '2023-01': { teto: 7507.49, faixas: [[1302.00, 7.5], [2571.29, 9], [3856.94, 12], [7507.49, 14]] }, /* jan–abr/2023 (Portaria MPS/MF 26/2023) */
   2023: { teto: 7507.49, faixas: [[1320.00, 7.5], [2571.29, 9], [3856.94, 12], [7507.49, 14]] },
   2024: { teto: 7786.02, faixas: [[1412.00, 7.5], [2666.68, 9], [4000.03, 12], [7786.02, 14]] },
   2025: { teto: 8157.41, faixas: [[1518.00, 7.5], [2793.88, 9], [4190.83, 12], [8157.41, 14]] },
@@ -634,6 +635,8 @@ function inS2501(ctx, e) {
 /* ------------------------------------------------------------------ */
 /* Fundamentos de cálculo                                               */
 /* ------------------------------------------------------------------ */
+/* Chave da tabela vigente na competência (2023 teve duas tabelas: jan–abr e a partir de maio — Portarias MPS/MF 26 e 27/2023) */
+function tblKey(P, per) { const p = normPer(per); if (/^2023-0[1-4]$/.test(p) && P.tabelaInss['2023-01']) return '2023-01'; return yearOf(p); }
 function maxContrib(P, year) {
   const t = P.tabelaInss[year]; if (!t) return null;
   let prev = 0, tot = 0; for (const [lim, al] of t.faixas) { tot += (lim - prev) * al / 100; prev = lim; } return r2(tot);
@@ -664,14 +667,22 @@ function ratesFor(ctx, per, estabNr, indS, lot) {
 }
 
 function addMonths(per, n) { const [y, m] = per.split('-').map(Number); const d = new Date(Date.UTC(y, m - 1 + n, 1)); return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0'); }
-function prazo(ctx, per) {
+function prazo(ctx, per, tributo) {
+  /* CTN, art. 168, I: 5 anos contados da data do pagamento (extinção do crédito). O XML não traz a data do DARF/DAE; o limite
+     estimado parte do vencimento (dia 20 do mês seguinte, Lei 8.212/91, art. 30, I, "b" [VERIFICAR FONTE OFICIAL quanto à antecipação em dia não útil]) e o limite
+     conservador parte do último dia da competência. Entre os dois, o status exige confirmar a data do pagamento. */
   const p = normPer(per); if (!/^\d{4}-\d{2}$/.test(p)) return { status: 'n/d', limite: '', dias: null };
   const [y, m] = p.split('-').map(Number);
   const venc = new Date(Date.UTC(y, m, 20));
   const lim = new Date(Date.UTC(y + 5, m, 20));
+  const limMin = new Date(Date.UTC(y + 5, m, 0));
   const hoje = new Date(ctx.P.hoje + 'T00:00:00Z');
-  const dias = Math.floor((lim - hoje) / 86400000);
-  return { status: dias < 0 ? 'Fora do prazo' : (dias < 180 ? 'Vence em <6 meses' : 'No prazo'), limite: lim.toISOString().slice(0, 10), dias, venc: venc.toISOString().slice(0, 10) };
+  const dias = Math.floor((lim - hoje) / 86400000), diasMin = Math.floor((limMin - hoje) / 86400000);
+  let status = dias < 0 ? 'Fora do prazo' : (diasMin < 180 ? 'Vence em <6 meses' : 'No prazo');
+  const o = { status, limite: lim.toISOString().slice(0, 10), limiteMin: limMin.toISOString().slice(0, 10), dias, venc: venc.toISOString().slice(0, 10) };
+  if (dias >= 0 && diasMin < 0) o.confirmar = 'Limite entre ' + o.limiteMin + ' e ' + o.limite + ' conforme a data real do pagamento: confirmar pelo DARF/DAE.';
+  if (tributo === 'FGTS') o.nota = 'O prazo de 5 anos do CTN não regula o FGTS; confirmar prazo e via no regulamento do Agente Operador.';
+  return o;
 }
 
 /* Grau de verificação por regra:
@@ -689,7 +700,7 @@ function F(ctx, o) {
   if (o.conf) f.conf = o.conf;
   if (o.legalExtra) f.legal.unshift(o.legalExtra);
   f.credito = r2(f.credito); f.base = r2(f.base);
-  f.prazo = prazo(ctx, f.per);
+  f.prazo = prazo(ctx, f.per, f.tributo);
   ctx.findings.push(f);
 }
 const nameOf = (nat) => (NAT[nat] ? NAT[nat] : 'natRubr ' + nat);
@@ -822,17 +833,17 @@ function ruleSegurado(ctx) {
     const desc_ = sum(o.calc, (c) => c.vrDescSeg), calc = sum(o.calc, (c) => c.vrCpSeg);
     const files = [o.file];
     if (desc_ - calc > 0.01) { F(ctx, { rule: 'SEG-01', cpf: o.cpf, per: o.per, ref: 'S-5001 infoCpCalc', base: desc_, credito: desc_ - calc, files, det: 'Descontado do segurado R$ ' + r2(desc_) + ' > calculado pelo eSocial R$ ' + r2(calc) + '. Excedente devolvível ao trabalhador.' }); continue; }
-    const mx = maxContrib(P, year); if (mx == null) continue;
+    const tk = tblKey(P, o.per); const mx = maxContrib(P, tk); if (mx == null) continue;
     const has13 = o.bases.some((b) => b.ind13 === '1'); const cap = mx * (has13 ? 2 : 1);
     const cand = [];
-    if (desc_ > cap + P.toleranciaTeto) cand.push({ ref: 'S-5001 vrDescSeg × teto ' + year, credito: desc_ - cap, conf: 'Alta', files, det: 'Descontado R$ ' + r2(desc_) + ' acima do máximo de R$ ' + r2(cap) + ' (teto ' + year + ': R$ ' + P.tabelaInss[year].teto + (has13 ? '; inclui 13º' : '') + ').' });
+    if (desc_ > cap + P.toleranciaTeto) cand.push({ ref: 'S-5001 vrDescSeg × teto ' + year, credito: desc_ - cap, conf: 'Alta', files, det: 'Descontado R$ ' + r2(desc_) + ' acima do máximo de R$ ' + r2(cap) + ' (teto ' + year + ': R$ ' + P.tabelaInss[tk].teto + (has13 ? '; inclui 13º' : '') + ').' });
     const ev = ctx.s1200.find((x) => x.cpf === o.cpf && x.per === o.per);
     if (ev && ev.mv) {
       const baseMes = sum(o.bases.filter((b) => b.tp === '11' && b.ind13 !== '1'), (b) => b.v);
       const outras = sum(ev.mv.outr, (x) => x.vr);
       if (ev.mv.ind === '3' && desc_ > 0.01) cand.push({ ref: 'S-1200 infoMV indMV=3', credito: desc_, conf: 'Alta', files: [o.file, ev.file], det: 'indMV=3 (teto já atingido em outra empresa; sem desconto devido), mas houve desconto de R$ ' + r2(desc_) + '.' });
       else if (ev.mv.ind === '2' && !has13) {
-        const esp = Math.max(0, (contrib(P, year, baseMes + outras) || 0) - (contrib(P, year, outras) || 0));
+        const esp = Math.max(0, (contrib(P, tk, baseMes + outras) || 0) - (contrib(P, tk, outras) || 0));
         if (desc_ - esp > P.toleranciaTeto) cand.push({ ref: 'S-1200 infoMV indMV=2', credito: desc_ - esp, conf: 'Média', files: [o.file, ev.file], det: 'indMV=2: esperado ≈ R$ ' + r2(esp) + ' (considerada a remuneração em outras empresas R$ ' + r2(outras) + '); descontado R$ ' + r2(desc_) + '.' });
       }
     }
@@ -943,9 +954,9 @@ function resumo(ctx) {
 const fkey = (f) => [f.rule, f.cpf, f.mat, f.per, f.ref].join('|');
 function dehydrate(f) { return { rule: f.rule, kind: f.kind, conf: f.conf, credito: f.credito, base: f.base, cpf: f.cpf, mat: f.mat, ref: f.ref, per: f.per, det: f.det, files: f.files, legal: f.legal, k: fkey(f) }; }
 function hydrate(s, hoje) { const r = RULES[s.rule] || { tributo: 'GERAL', titulo: s.rule, acao: '', legal: [] };
-  const f = Object.assign({ tributo: r.tributo, titulo: r.titulo, acao: r.acao }, s); f.prazo = prazo({ P: { hoje } }, s.per); return f; }
+  const f = Object.assign({ tributo: r.tributo, titulo: r.titulo, acao: r.acao }, s); f.prazo = prazo({ P: { hoje } }, s.per, f.tributo); return f; }
 
-return { fkey, dehydrate, hydrate, createContext, ingestDoc, runRules, resumo, defaultParams, RULES, NAT, NATR, TABELA_INSS, TAGMAP, GRAU, VERIF, tercRate, CONFORM, cpfOk, cnpjOk, maxContrib, contrib, prazo, version: '1.0.0' };
+return { tblKey, fkey, dehydrate, hydrate, createContext, ingestDoc, runRules, resumo, defaultParams, RULES, NAT, NATR, TABELA_INSS, TAGMAP, GRAU, VERIF, tercRate, CONFORM, cpfOk, cnpjOk, maxContrib, contrib, prazo, version: '1.0.0' };
 });
 </script>
 <script>/* Validação preventiva dos eventos do eSocial, derivada das tabelas de campos do leiaute S-1.3 (obrigatoriedade, ocorrência,
@@ -1386,7 +1397,7 @@ function roteiro(x) {
 function renderDetail(id) {
   const x = st.ctx.findings.find((f) => f.id === id); st.sel = id; $$('.row').forEach((r) => r.classList.toggle('on', +r.dataset.id === id)); if (!x) return;
   const pz = x.prazo; $('#detail').hidden = false;
-  $('#detail').innerHTML = '<button class="x close" id="dClose" aria-label="Fechar">×</button><h3>' + x.rule + ' — ' + esc(x.titulo) + '</h3><div class="chips"><span class="chip">' + esc(x.tributo) + '</span><span class="chip">Confiança: ' + x.conf + '</span><span class="chip ' + (pz.status === 'Fora do prazo' ? 'bad' : pz.status.startsWith('Vence') ? 'amb' : '') + '">Prazo: ' + pz.status + (pz.limite ? ' (até ' + pz.limite.split('-').reverse().join('/') + ')' : '') + '</span></div>' +
+  $('#detail').innerHTML = '<button class="x close" id="dClose" aria-label="Fechar">×</button><h3>' + x.rule + ' — ' + esc(x.titulo) + '</h3><div class="chips"><span class="chip">' + esc(x.tributo) + '</span><span class="chip">Confiança: ' + x.conf + '</span><span class="chip ' + (pz.status === 'Fora do prazo' ? 'bad' : pz.status.startsWith('Vence') ? 'amb' : '') + '">Prazo: ' + pz.status + (pz.limite ? ' (até ' + pz.limite.split('-').reverse().join('/') + ')' : '') + '</span></div>' + ((pz.confirmar || pz.nota) ? '<p class="muted">' + esc([pz.confirmar, pz.nota].filter(Boolean).join(' ')) + '</p>' : '') +
     '<dl><dt>Grau de verificação</dt><dd>' + esc(E.GRAU[E.VERIF[x.rule]] || '—') + '</dd><dt>Valor</dt><dd>' + (x.credito ? brl(x.credito) : '—') + (x.base ? ' sobre base de ' + brl(x.base) : '') + '</dd><dt>Competência</dt><dd>' + esc(x.per) + '</dd>' + (x.cpf ? '<dt>Trabalhador</dt><dd>' + maskCpf(x.cpf) + (x.mat ? ' · mat. ' + esc(x.mat) : '') + '</dd>' : '') + '<dt>Referência</dt><dd>' + esc(x.ref) + '</dd><dt>Constatação</dt><dd>' + esc(x.det) + '</dd></dl>' +
     '<h4>Base legal</h4><ul class="legal">' + x.legal.map((l) => '<li>' + esc(l) + '</li>').join('') + '</ul><h4>Providência</h4><p>' + esc(x.acao) + '</p>' + roteiro(x) + (x.kind === 'credito' ? statusForm(x) : '') + (x.files.length ? '<h4>Arquivos de origem</h4><p class="muted">' + [...new Set(x.files)].map(esc).join('<br>') + '</p>' : '');
   $('#dClose').onclick = () => { $('#detail').hidden = true; st.sel = null; renderList(); };
