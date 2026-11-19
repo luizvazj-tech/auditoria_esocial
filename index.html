@@ -2,8 +2,8 @@
 <!-- © 2026 Luis Alfredo Vaz Junior. Todos os direitos reservados. Programa de computador protegido pela Lei 9.609/1998 e pela Lei 9.610/1998. Versão piloto de uso restrito: é vedada a cópia, a modificação, a engenharia reversa, a redistribuição e a exploração comercial sem autorização escrita do titular. -->
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Auditoria eSocial — Recuperação de Créditos</title>
 <style>
@@ -435,14 +435,17 @@ function mkItem(base, it) {
 
 function storeLast(ctx, key, evt, list) {
   const prev = ctx.byKey[key];
-  if (prev !== undefined) { ctx.dups++; list[prev] = evt; } else { ctx.byKey[key] = list.length; list.push(evt); }
+  if (prev === undefined) { ctx.byKey[key] = list.length; list.push(evt); return; }
+  ctx.dups++; const old = list[prev];
+  /* O evento retificador (indRetif=2) prevalece sobre o original, qualquer que seja a ordem de leitura. */
+  if ((evt.retif || 0) >= (old.retif || 0)) { if (evt.retif && old.retif) ctx.warnings.push('Mais de uma retificação do mesmo evento (' + key + '): prevaleceu a última lida; confira a ordem pelos recibos.'); list[prev] = evt; }
 }
 
 function inS1200(ctx, e, meta) {
   const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao');
-  const tr = kid(e, 'ideTrabalhador'); const cpf = val(tr, 'cpfTrab');
+  const tr = kid(e, 'ideTrabalhador'); const cpf = digits(val(tr, 'cpfTrab'));
   const mv = kid(tr, 'infoMV');
-  const evt = { type: 'S-1200', file: meta.file, cpf, per, ind, mv: mv ? { ind: val(mv, 'indMV'), outr: kids(mv, 'remunOutrEmpr').map((r) => ({ vr: num(val(r, 'vlrRemunOE')), cat: val(r, 'codCateg') })) } : null, items: [] };
+  const evt = { type: 'S-1200', retif: val(ide, 'indRetif') === '2' ? 1 : 0, file: meta.file, cpf, per, ind, mv: mv ? { ind: val(mv, 'indMV'), outr: kids(mv, 'remunOutrEmpr').map((r) => ({ vr: num(val(r, 'vlrRemunOE')), cat: val(r, 'codCateg') })) } : null, items: [] };
   for (const dm of kids(e, 'dmDev')) {
     const base0 = { src: 'S-1200', cpf, per, file: meta.file, ideDm: val(dm, 'ideDmDev'), categ: val(dm, 'codCateg') };
     const ipa = kid(dm, 'infoPerApur');
@@ -457,8 +460,8 @@ function inS1200(ctx, e, meta) {
 
 function inS2299(ctx, e, meta) {
   const iv = kid(e, 'ideVinculo'); const id = kid(e, 'infoDeslig'); if (!id) return;
-  const cpf = val(iv, 'cpfTrab'), mat = val(iv, 'matricula'); const dt = val(id, 'dtDeslig'); const per = dt.slice(0, 7);
-  const evt = { type: 'S-2299', file: meta.file, cpf, mat, per, dtDeslig: dt, mtv: val(id, 'mtvDeslig'), items: [] };
+  const cpf = digits(val(iv, 'cpfTrab')), mat = val(iv, 'matricula'); const dt = val(id, 'dtDeslig'); const per = dt.slice(0, 7);
+  const evt = { type: 'S-2299', retif: val(kid(e, 'ideEvento'), 'indRetif') === '2' ? 1 : 0, file: meta.file, cpf, mat, per, dtDeslig: dt, mtv: val(id, 'mtvDeslig'), items: [] };
   const vr = kid(id, 'verbasResc');
   if (vr) for (const dm of kids(vr, 'dmDev')) {
     const base0 = { src: 'S-2299', cpf, mat, per, perRef: per, file: meta.file, ideDm: val(dm, 'ideDmDev'), categ: '', ant: false };
@@ -474,11 +477,11 @@ function inS2299(ctx, e, meta) {
 function inS2230(ctx, e) {
   const iv = kid(e, 'ideVinculo'); const ia = kid(e, 'infoAfastamento'); if (!ia) return;
   const ini = kid(ia, 'iniAfastamento'), fim = kid(ia, 'fimAfastamento');
-  ctx.afast.push({ cpf: val(iv, 'cpfTrab'), mat: val(iv, 'matricula'), ini: ini ? val(ini, 'dtIniAfast') : '', mot: ini ? val(ini, 'codMotAfast') : '', fim: fim ? val(fim, 'dtTermAfast') : '' });
+  ctx.afast.push({ cpf: digits(val(iv, 'cpfTrab')), mat: val(iv, 'matricula'), ini: ini ? val(ini, 'dtIniAfast') : '', mot: ini ? val(ini, 'codMotAfast') : '', fim: fim ? val(fim, 'dtTermAfast') : '' });
 }
 
 function inS5001(ctx, e, meta) {
-  const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao'); const cpf = val(kid(e, 'ideTrabalhador'), 'cpfTrab');
+  const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao'); const cpf = digits(val(kid(e, 'ideTrabalhador'), 'cpfTrab'));
   const o = { cpf, per, ind, file: meta.file, calc: [], bases: [], terc: [] };
   for (const c of desc(e, 'infoCpCalc')) o.calc.push({ cr: val(c, 'tpCR'), vrCpSeg: num(val(c, 'vrCpSeg')), vrDescSeg: num(val(c, 'vrDescSeg')) });
   for (const ic of desc(e, 'infoCategIncid')) {
@@ -490,7 +493,7 @@ function inS5001(ctx, e, meta) {
 }
 
 function inS5002(ctx, e, meta) {
-  const per = val(kid(e, 'ideEvento'), 'perApur'); const cpf = val(kid(e, 'ideTrabalhador'), 'cpfBenef');
+  const per = val(kid(e, 'ideEvento'), 'perApur'); const cpf = digits(val(kid(e, 'ideTrabalhador'), 'cpfBenef'));
   const o = { cpf, per, file: meta.file, rendTrib: 0, rendTrib13: 0, cr: 0, cr13: 0, ded: 0, deps: {}, dmDev: 0 };
   for (const d of desc(e, 'dmDev')) o.dmDev++;
   for (const t of desc(e, 'totApurMen')) { o.rendTrib += num(val(t, 'vlrRendTrib')); o.rendTrib13 += num(val(t, 'vlrRendTrib13')); o.cr += num(val(t, 'vlrCRMen')); o.cr13 += num(val(t, 'vlrCR13Men')); }
@@ -500,7 +503,7 @@ function inS5002(ctx, e, meta) {
 }
 
 function inS5003(ctx, e, meta) {
-  const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao'); const cpf = val(kid(e, 'ideTrabalhador'), 'cpfTrab');
+  const ide = kid(e, 'ideEvento'); const per = val(ide, 'perApur'); const ind = val(ide, 'indApuracao'); const cpf = digits(val(kid(e, 'ideTrabalhador'), 'cpfTrab'));
   const o = { cpf, per, ind, file: meta.file, bases: [] };
   for (const t of desc(e, 'infoTrabFGTS')) {
     const mat = val(t, 'matricula'), cat = val(t, 'codCateg'), mtv = val(t, 'mtvDeslig');
@@ -531,7 +534,7 @@ function inS5011(ctx, e) {
 function inS2500(ctx, e) {
   const ip = kid(e, 'infoProcesso'); const nr = val(ip, 'nrProcTrab');
   for (const it of desc(e, 'ideTrab')) {
-    const cpf = val(it, 'cpfTrab');
+    const cpf = digits(val(it, 'cpfTrab'));
     for (const iv of desc(it, 'infoVlr')) {
       let b = 0, b13 = 0; for (const bc of desc(iv, 'baseCalculo')) { b += num(val(bc, 'vrBcCpMensal')); b13 += num(val(bc, 'vrBcCp13')); }
       ctx.p2500.push({ nr, cpf, rep: val(iv, 'indReperc'), ini: val(iv, 'compIni'), fim: val(iv, 'compFim'), sd: val(iv, 'indenSD'), ab: val(iv, 'indenAbono'), b, b13 });
@@ -541,7 +544,7 @@ function inS2500(ctx, e) {
 function inS2501(ctx, e) {
   const nr = val(kid(e, 'ideProc'), 'nrProcTrab');
   for (const it of desc(e, 'ideTrab')) {
-    const cpf = val(it, 'cpfTrab'); let cp = 0; const per = val(kid(e, 'ideProc'), 'perApurPgto');
+    const cpf = digits(val(it, 'cpfTrab')); let cp = 0; const per = val(kid(e, 'ideProc'), 'perApurPgto');
     for (const c of desc(it, 'infoCRContrib')) cp += num(val(c, 'vrCR'));
     let ir = 0, rend = 0, iso = 0; for (const c of desc(it, 'infoCRIRRF')) { ir += num(val(c, 'vrCR')); for (const i of desc(c, 'infoIR')) { rend += num(val(i, 'vrRendTrib')); iso += num(val(i, 'vrRendIsenNTrib')); } }
     ctx.c2501.push({ nr, cpf, per, cp, ir, rend, iso });
